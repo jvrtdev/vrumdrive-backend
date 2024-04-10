@@ -16,7 +16,7 @@ class UsersRepository
         $this->database = $database;
     }
 
-    public function listarcolunas(): array
+    public function getColumns(): array
     {
         $pdo = $this->database->getConnection();
 
@@ -25,28 +25,26 @@ class UsersRepository
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public function createUser(array $columns)
+    public function createUser(array $data_columns)
     {
-        $sql = 'INSERT INTO users (nome, datanasc, sexo, nome_mat, cpf, email, celular, telefone, cep, estado, cidade, rua, logradouro, login, senha) values (:nome, :datanasc, :sexo, :nome_mat, :cpf, :email, :celular, :telefone, :cep, :estado, :cidade, :rua, :logradouro, :login, :senha)';
+        $columns = $this->getColumns();
+
+        array_shift($columns);
+
+        $placeholders = array_map(function($column) {
+            return ":$column";
+        }, $columns);
+
+        $sql = 'INSERT INTO users (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')';
 
         $pdo = $this->database->getConnection();
 
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':nome', $columns[1]);
-        $stmt->bindValue(':datanasc', $columns[2]);
-        $stmt->bindValue(':sexo', $columns[3]);
-        $stmt->bindValue(':nome_mat', $columns[4]);
-        $stmt->bindValue(':cpf', $columns[5]);
-        $stmt->bindValue(':email', $columns[6]);
-        $stmt->bindValue(':celular', $columns[7]);
-        $stmt->bindValue(':telefone', $columns[8]);
-        $stmt->bindValue(':login', $columns[9]);
-        $stmt->bindValue(':senha', $columns[10]);
-        $stmt->bindValue(':cep', $columns[11]);
-        $stmt->bindValue(':estado', $columns[12]);
-        $stmt->bindValue(':cidade', $columns[13]);
-        $stmt->bindValue(':rua', $columns[14]);
-        $stmt->bindValue(':logradouro', $columns[15]);
+
+        for($i = 0; $i < count($columns); $i++){
+            $stmt->bindValue($placeholders[$i], $data_columns[$i+1]);
+        }
+        
         return $stmt->execute();
     }
 }
