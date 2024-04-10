@@ -40,4 +40,23 @@ class UserController {
       $response->getBody()->write(json_encode(['message' => 'Failed to create user']));
       return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
   }
+
+  public function loginUser(Request $request, Response $response) 
+  {
+    $database = new Database;
+      
+    $userRepository = new UsersRepository($database);
+
+    $data = $request->getParsedBody();
+    $login = $data['login'];
+
+    $result = $userRepository->getUser($login);
+
+    if($result) {
+      $response->getBody()->write(json_encode(['message' => 'User authorizated']));
+      return $response->withStatus(200)->withHeader('COntent-Type', 'application/json');
+    }
+    $response->getBody()->write(json_encode(['message' => 'Failed to create user']));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+  }
 }
