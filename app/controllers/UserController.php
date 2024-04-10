@@ -5,6 +5,7 @@ use App\Database;
 use App\Repositories\UsersRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use \Firebase\JWT\JWT;
 
 class UserController {
   
@@ -49,14 +50,29 @@ class UserController {
 
     $data = $request->getParsedBody();
     $login = $data['login'];
+    $senha = $data['senha'];
 
-    $result = $userRepository->getUser($login);
+    $user = $userRepository->getUser($login);
 
-    if($result) {
-      $response->getBody()->write(json_encode(['message' => 'User authorizated']));
-      return $response->withStatus(200)->withHeader('COntent-Type', 'application/json');
-    }
-    $response->getBody()->write(json_encode(['message' => 'Failed to create user']));
-      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    if ($user && password_verify($senha, $user['password'])) {
+      $tokenPayload = [
+          'id' => $user['id'],
+          'senha' => $user['senha'],
+          'cpf' => $user['cpf']
+      ];
+
+      $secretKey = 'your_secret_key'; // Sua chave secreta para assinar o token
+
+      $algorithm = 'HS256'; //algoritmo de codificação
+
+      $token = JWT::encode($tokenPayload, $secretKey,$algorithm);
+
+      $response->getBody()->write(json_encode(['token' => $token]));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+  }
+    $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
+    return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+
+   
   }
 }
