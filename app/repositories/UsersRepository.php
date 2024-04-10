@@ -40,4 +40,16 @@ class UsersRepository
         $stmt->bindValue(':senha', $senha);
         return $stmt->execute();
     }
+
+    public function getUser($login)
+    {
+        $sql = 'SELECT * FROM users WHERE (login = :login)';
+
+        $pdo = $this->database->getConnection();
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':login', $login);
+
+        return $stmt->execute();
+    }
 }
