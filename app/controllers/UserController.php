@@ -14,24 +14,15 @@ class UserController {
       
       $userRepository = new UsersRepository($database);
 
-      $data = $request->getParsedBody();
-      $nome = $data['nome'];
-      $data_nasc = $data['data_nasc'];
-      $sexo = $data['sexo'];
-      $nome_mat = $data['nome_mat'];
-      $cpf = $data['cpf'];
-      $email = $data['email'];
-      $celular = $data['celular'];
-      $telefone = $data['telefone'];
-      $cep = $data['cep'];
-      $estado = $data['estado'];
-      $cidade = $data['cidade'];
-      $rua = $data['rua'];
-      $logradouro = $data['logradouro'];
-      $login = $data['login'];
-      $senha = $data['senha'];
+      $columns = $userRepository->listarcolunas();
 
-      $result = $userRepository->createUser($nome, $data_nasc, $sexo, $nome_mat, $cpf, $email, $celular, $telefone, $cep, $estado, $cidade, $rua, $logradouro, $login, $senha);
+      $data = $request->getParsedBody();
+
+      for($i = 1; $i < count($columns); $i++){
+        $data_columns[$i] = $data[$columns[$i]];
+      }
+
+      $result = $userRepository->createUser($data_columns);
 
       if ($result) {
         $response->getBody()->write(json_encode(['message' => 'User created successfully']));
