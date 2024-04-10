@@ -15,7 +15,7 @@ class UserController {
       
       $userRepository = new UsersRepository($database);
 
-      $columns = $userRepository->listarcolunas();
+      $columns = $userRepository->getColumns();
 
       $data = $request->getParsedBody();
 
