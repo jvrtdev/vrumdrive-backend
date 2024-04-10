@@ -19,7 +19,7 @@ class CarroController {
         
         $repository = new CarrosRepository($database);
 
-        $data = $repository->listarVeiculos();
+        $data = $repository->getVehicles();
 
         $body = json_encode($data);  
         

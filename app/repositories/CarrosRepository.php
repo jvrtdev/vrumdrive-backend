@@ -16,7 +16,7 @@ class CarrosRepository
         $this->database = $database;
     }
 
-    public function listarVeiculos(): array
+    public function getVehicles(): array
     {
         $pdo = $this->database->getConnection();
 
@@ -29,7 +29,7 @@ class CarrosRepository
     {
         $pdo = $this->database->getConnection();
 
-        $stmt = $pdo->query('SELECT * FROM vehicles WHERE vehicle_id = '.$args["id"]);
+        $stmt = $pdo->query('SELECT * FROM vehicles WHERE id = '.$args["id"]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
