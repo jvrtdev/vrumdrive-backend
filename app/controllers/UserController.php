@@ -61,7 +61,7 @@ class UserController {
           'cpf' => $user['cpf']
       ];
 
-      $secretKey = 'your_secret_key'; // Sua chave secreta para assinar o token
+      $secretKey = 'hai-oh-ri-tt-er' ; // Sua chave secreta para assinar o token
 
       $algorithm = 'HS256'; //algoritmo de codificação
 

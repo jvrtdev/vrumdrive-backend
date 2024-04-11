@@ -1,2 +1,5 @@
 ...vendor
 vendor
+/public/.env
+public/env
+.env
