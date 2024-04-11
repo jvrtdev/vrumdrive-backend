@@ -6,7 +6,16 @@ use App\Repositories\CarrosRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class CarroController {
+class CarroController 
+{
+    protected $vehicleRepository;
+
+    public function __construct() {
+        $database = new Database;
+
+        $this->vehicleRepository = new CarrosRepository($database);
+    }
+
     public function hello(Request $request, Response $response)
     {   
         $response->getBody()->write("Hello world!");
@@ -15,11 +24,7 @@ class CarroController {
     
     public function carros(Request $request, Response $response) 
     {
-        $database = new Database;
-        
-        $repository = new CarrosRepository($database);
-
-        $data = $repository->getVehicles();
+        $data = $this->vehicleRepository->getVehicles();
 
         $body = json_encode($data);  
         
@@ -30,11 +35,7 @@ class CarroController {
     public function carros_id(Request $request, Response $response, $args)
     //falta alterar essa função usando repository
     {
-        $database = new Database;
-        
-        $repository = new CarrosRepository($database);
-
-        $data = $repository->listarVeiculosId($args);
+        $data = $this->vehicleRepository->listarVeiculosId($args);
         
         $body = json_encode($data);  
         

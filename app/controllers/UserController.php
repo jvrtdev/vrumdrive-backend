@@ -6,15 +6,19 @@ use App\Repositories\UsersRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class UserController {
-  
-  public function createUser(Request $request, Response $response)
-  {
+class UserController 
+{
+  protected $userRepository;
+
+  public function __construct() {
       $database = new Database;
       
-      $userRepository = new UsersRepository($database);
+      $this->userRepository = new UsersRepository($database);
+  }
 
-      $columns = $userRepository->getColumns();
+  public function createUser(Request $request, Response $response)
+  {
+      $columns = $this->userRepository->getColumns();
 
       $data = $request->getParsedBody();
 
@@ -22,7 +26,7 @@ class UserController {
         $data_columns[$columns[$i]] = $data[$columns[$i]];
       }
 
-      $result = $userRepository->createUser($data_columns);
+      $result = $this->userRepository->createUser($data_columns);
 
       if ($result) {
         $response->getBody()->write(json_encode(['message' => 'User created successfully']));
