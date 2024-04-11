@@ -42,7 +42,7 @@ class UsersRepository
         $stmt = $pdo->prepare($sql);
 
         for($i = 0; $i < count($columns); $i++){
-            $stmt->bindValue($placeholders[$i], $data_columns[$i+1]);
+            $stmt->bindValue($placeholders[$i], $data_columns[$columns[$i]]);
         }
         
         return $stmt->execute();
