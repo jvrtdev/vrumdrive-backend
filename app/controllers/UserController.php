@@ -19,7 +19,7 @@ class UserController {
       $data = $request->getParsedBody();
 
       for($i = 1; $i < count($columns); $i++){
-        $data_columns[$i] = $data[$columns[$i]];
+        $data_columns[$columns[$i]] = $data[$columns[$i]];
       }
 
       $result = $userRepository->createUser($data_columns);
