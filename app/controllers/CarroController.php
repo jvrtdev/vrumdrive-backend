@@ -10,7 +10,8 @@ class CarroController
 {
     protected $vehicleRepository;
 
-    public function __construct() {
+    public function __construct() 
+    {
         $database = new Database;
 
         $this->vehicleRepository = new CarrosRepository($database);
@@ -42,6 +43,4 @@ class CarroController
         $response->getBody()->write($body);
         return $response->withHeader('Content-Type', 'application/json');
     }
-
-
 }
