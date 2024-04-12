@@ -20,4 +20,6 @@ $app->get('/api/carros/{id}', CarroController::class . ':carros_id');
 
 $app->post('/api/user/create', UserController::class . ':createUser');
 
+$app->post('/api/user/login', UserController::class . ':loginUser');
+
 $app->run();

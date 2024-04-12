@@ -47,4 +47,21 @@ class UsersRepository
         
         return $stmt->execute();
     }
+
+    public function getUser($login)
+    {
+        $sql = 'SELECT * FROM users WHERE login = :login';
+
+        // Prepara a consulta SQL
+        $stmt = $this->database->getConnection()->prepare($sql);
+        
+        // Substitui o marcador de posição :login pelo valor fornecido
+        $stmt->bindValue(':login', $login);
+
+        // Executa a consulta
+        $stmt->execute();
+
+        // Retorna os resultados como um array associativo
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
