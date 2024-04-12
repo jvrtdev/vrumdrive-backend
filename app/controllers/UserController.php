@@ -39,28 +39,36 @@ class UserController {
       
     $userRepository = new UsersRepository($database);
 
-    $data = $request->getParsedBody();
-    $login = $data['login'];
-    $senha = $data['senha'];
+    $body = $request->getBody();
+    $data = json_decode($body);
+    $login = $data->login;
+    
 
     $user = $userRepository->getUser($login);
-
-    if ($user && password_verify($senha, $user['password'])) {
-      $tokenPayload = [
-          'id' => $user['id'],
-          'senha' => $user['senha'],
-          'cpf' => $user['cpf']
+    
+    
+    if($user) {
+      $userData = $user[0];//acessa a primeira posicao do array que contem um objeto
+      //gerar um token
+      $payload = [
+        'cpf' => $userData['cpf'],
+        'login' => $userData['login'],
+        'senha' => $userData['senha'],
       ];
+      
+      $jwt = JWT::encode($payload, 'hai-how-ri-tter', 'HS256');//args->informacoes, chave secreta, criptografia
 
-      $secretKey = 'hai-oh-ri-tt-er' ; // Sua chave secreta para assinar o token
+      // Retorna o token JWT no cabeçalho de autorização
+      $response = $response->withHeader('Authorization', $jwt);
 
-      $algorithm = 'HS256'; //algoritmo de codificação
-
-      $token = JWT::encode($tokenPayload, $secretKey,$algorithm);
-
-      $response->getBody()->write(json_encode(['token' => $token]));
+      // Retorne o token JWT na resposta
+      $response->getBody()->write(json_encode(['token' => $jwt]));
+       
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-  }
+    };
+
+    
+    
     $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
 
