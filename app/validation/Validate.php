@@ -1,16 +1,13 @@
 <?php
 namespace App\Validation;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-
 class Validate
 {
     public function cpfValidator($cpf)
     {
       $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
-      if (strlen($cpf) != 11) 
+      if (strlen($cpf) != 11)
       {
           return "Número de caractéres inválido";
       }

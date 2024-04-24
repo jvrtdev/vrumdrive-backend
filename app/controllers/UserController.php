@@ -30,7 +30,7 @@ class UserController
       $data = get_object_vars(json_decode($request->getBody()));
 
       $erro = $this->validate->cpfValidator($data["cpf"]);
-      if($erro != false)
+      if($erro)
       {
           $response->getBody()->write(json_encode(['message' => $erro]));
           return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
