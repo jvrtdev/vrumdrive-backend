@@ -31,7 +31,8 @@ class UsersRepository
 
         array_shift($columns);
 
-        $placeholders = array_map(function($column) {
+        $placeholders = array_map(function($column) 
+        {
             return ":$column";
         }, $columns);
 
@@ -41,7 +42,8 @@ class UsersRepository
 
         $stmt = $pdo->prepare($sql);
 
-        for($i = 0; $i < count($columns); $i++){
+        for($i = 0; $i < count($columns); $i++)
+        {
             $stmt->bindValue($placeholders[$i], $data_columns[$columns[$i]]);
         }
         

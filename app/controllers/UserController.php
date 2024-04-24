@@ -3,29 +3,48 @@ namespace App\Controllers;
 
 use App\Database;
 use App\Repositories\UsersRepository;
+use App\Validation\Validate;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use \Firebase\JWT\JWT;
 
-class UserController {
-  
-  public function createUser(Request $request, Response $response)
+class UserController 
+{
+  protected $userRepository;
+
+  protected $validate;
+
+  public function __construct() 
   {
       $database = new Database;
       
-      $userRepository = new UsersRepository($database);
+      $this->userRepository = new UsersRepository($database);
 
-      $columns = $userRepository->getColumns();
+      $this->validate = new Validate();
+  }
 
-      $data = $request->getParsedBody();
+  public function createUser(Request $request, Response $response)
+  {
+      $columns = $this->userRepository->getColumns();
 
-      for($i = 1; $i < count($columns); $i++){
+      $data = get_object_vars(json_decode($request->getBody()));
+
+      $erro = $this->validate->cpfValidator($data["cpf"]);
+      if($erro != false)
+      {
+          $response->getBody()->write(json_encode(['message' => $erro]));
+          return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+      }
+
+      for($i = 1; $i < count($columns); $i++)
+      {
         $data_columns[$columns[$i]] = $data[$columns[$i]];
       }
 
-      $result = $userRepository->createUser($data_columns);
+      $result = $this->userRepository->createUser($data_columns);
 
-      if ($result) {
+      if ($result) 
+      {
         $response->getBody()->write(json_encode(['message' => 'User created successfully']));
         return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
       }

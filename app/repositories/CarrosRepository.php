@@ -16,6 +16,15 @@ class CarrosRepository
         $this->database = $database;
     }
 
+    public function getColumns(): array
+    {
+        $pdo = $this->database->getConnection();
+
+        $stmt = $pdo->query('SHOW COLUMNS FROM vehicles');
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
     public function getVehicles(): array
     {
         $pdo = $this->database->getConnection();
@@ -24,7 +33,7 @@ class CarrosRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    //criar função com o nome listarCarrosPorId aqui
+    
     public function listarVeiculosId($args): array
     {
         $pdo = $this->database->getConnection();
