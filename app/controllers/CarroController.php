@@ -42,5 +42,17 @@ class CarroController {
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    public function carros_id_delete(Request $request, Response $response, $args)
+    
+    {
+        $database = new Database;
+        
+        $repository = new CarrosRepository($database);
+
+        $execute = $repository->deleteVehicles($args);
+
+        $response->getBody()->write('Veiculo com o ID: '. $args["id"] .' Excluído com sucesso!');
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 
 }

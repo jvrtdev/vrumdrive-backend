@@ -16,6 +16,8 @@ $app->get('/', CarroController::class . ':hello');
 
 $app->get('/api/carros', CarroController::class . ':carros');
 
+$app->get('/api/carros_delete/{id}', CarroController::class . ':carros_id_delete');
+
 $app->get('/api/carros/{id}', CarroController::class . ':carros_id');
 
 $app->post('/api/create_user', UserController::class . ':createUser');
