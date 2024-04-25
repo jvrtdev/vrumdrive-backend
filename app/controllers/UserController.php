@@ -61,9 +61,10 @@ class UserController
     $body = $request->getBody();
     $data = json_decode($body);
     $login = $data->login;
+    $senha = $data->senha;
     
 
-    $user = $userRepository->getUser($login);
+    $user = $userRepository->getUser($login, $senha);
     
     
     if($user) {
@@ -90,7 +91,5 @@ class UserController
     
     $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
-
-   
   }
 }

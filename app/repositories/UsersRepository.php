@@ -50,15 +50,16 @@ class UsersRepository
         return $stmt->execute();
     }
 
-    public function getUser($login)
+    public function getUser($login, $senha)
     {
-        $sql = 'SELECT * FROM users WHERE login = :login';
+        $sql = 'SELECT * FROM users WHERE login = :login AND senha = :senha';
 
         // Prepara a consulta SQL
         $stmt = $this->database->getConnection()->prepare($sql);
         
         // Substitui o marcador de posição :login pelo valor fornecido
         $stmt->bindValue(':login', $login);
+        $stmt->bindValue(':senha', $senha);
 
         // Executa a consulta
         $stmt->execute();
