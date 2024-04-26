@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Database;
 use App\Repositories\UsersRepository;
+use App\Validation\AuthUser;
 use App\Validation\Validate;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -69,27 +70,33 @@ class UserController
     
     if($user) {
       $userData = $user[0];//acessa a primeira posicao do array que contem um objeto
+      
+      $authUser = new AuthUser('vrumvrumdrivetopdemais');
+      $token = $authUser->createToken($userData);
+      
       //gerar um token
-      $payload = [
+      /*$payload = [
         'cpf' => $userData['cpf'],
         'login' => $userData['login'],
         'senha' => $userData['senha'],
       ];
       
-      $jwt = JWT::encode($payload, 'hai-how-ri-tter', 'HS256');//args->informacoes, chave secreta, criptografia
+      $jwt = JWT::encode($payload, 'vrumvrumdrivetopdemais', 'HS256');*///args->informacoes, chave secreta, criptografia
 
       // Retorna o token JWT no cabeçalho de autorização
-      $response = $response->withHeader('Authorization', $jwt);
+      $response = $response->withHeader('Authorization', $token);
 
       // Retorne o token JWT na resposta
-      $response->getBody()->write(json_encode(['token' => $jwt]));
+      $response->getBody()->write(json_encode(['token' => $token]));
        
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     };
-
-    
-    
     $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+  }
+  
+  public function getBookings(Request $request, Response $response)
+  {
+    
   }
 }
