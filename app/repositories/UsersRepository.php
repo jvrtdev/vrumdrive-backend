@@ -16,7 +16,7 @@ class UsersRepository
         $this->database = $database;
     }
 
-    public function getColumns(): array
+    public function getColumnsUser(): array
     {
         $pdo = $this->database->getConnection();
 
@@ -25,26 +25,68 @@ class UsersRepository
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public function createUser(array $data_columns)
+    public function getColumnsAddress(): array
     {
-        $columns = $this->getColumns();
+        $pdo = $this->database->getConnection();
 
-        array_shift($columns);
+        $stmt = $pdo->query('SHOW COLUMNS FROM address');
 
-        $placeholders = array_map(function($column) 
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function createAddress(array $data_columns): string
+    {
+        $columns_address = $this->getColumnsAddress();
+
+        array_shift($columns_address);
+
+        $placeholders_address = array_map(function($column) 
         {
             return ":$column";
-        }, $columns);
+        }, $columns_address);
 
-        $sql = 'INSERT INTO users (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')';
+        $sql = 'INSERT INTO address (' . implode(', ', $columns_address) . ') VALUES (' . implode(', ', $placeholders_address) . ')';
 
         $pdo = $this->database->getConnection();
 
         $stmt = $pdo->prepare($sql);
 
-        for($i = 0; $i < count($columns); $i++)
+        for($i = 0; $i < count($columns_address); $i++)
         {
-            $stmt->bindValue($placeholders[$i], $data_columns[$columns[$i]]);
+            $stmt->bindValue($placeholders_address[$i], $data_columns[$columns_address[$i]]);
+        }
+        
+        $stmt->execute();
+
+        $stmt = $pdo->query('SELECT LAST_INSERT_ID()');
+
+        $id_address = $stmt->fetch();
+
+        return $id_address[0];
+    }
+
+    public function createUser(array $data_columns): bool
+    {
+        $data_columns["id_address"] = $this->createAddress($data_columns);
+
+        $columns_user = $this->getColumnsUser();
+
+        array_shift($columns_user);
+
+        $placeholders_user = array_map(function($column) 
+        {
+            return ":$column";
+        }, $columns_user);
+
+        $sql = 'INSERT INTO users (' . implode(', ', $columns_user) . ') VALUES (' . implode(', ', $placeholders_user) . ')';
+
+        $pdo = $this->database->getConnection();
+
+        $stmt = $pdo->prepare($sql);
+
+        for($i = 0; $i < count($columns_user); $i++)
+        {
+            $stmt->bindValue($placeholders_user[$i], $data_columns[$columns_user[$i]]);
         }
         
         return $stmt->execute();
