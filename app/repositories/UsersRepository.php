@@ -67,4 +67,17 @@ class UsersRepository
         // Retorna os resultados como um array associativo
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getAuth($cpf)
+    {
+        $sql = 'SELECT cpf FROM users WHERE cpf = :cpf';
+
+        $stmt = $this->database->getConnection()->prepare($sql);
+        
+        $stmt->bindValue(':cpf', $cpf);
+        
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }
