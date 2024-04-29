@@ -24,4 +24,6 @@ $app->post('/api/user/create', UserController::class . ':createUser');
 
 $app->post('/api/user/login', UserController::class . ':loginUser');
 
+$app->post('/api/auth', UserController::class . ':authentication');
+
 $app->run();
