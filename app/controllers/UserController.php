@@ -7,13 +7,14 @@ use App\Validation\AuthUser;
 use App\Validation\Validate;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use \Firebase\JWT\JWT;
 
 class UserController 
 {
   protected $userRepository;
 
   protected $validate;
+
+  protected $auth;
 
   public function __construct() 
   {
@@ -22,6 +23,8 @@ class UserController
       $this->userRepository = new UsersRepository($database);
 
       $this->validate = new Validate();
+      
+      $this->auth = new AuthUser('vrumvrumdrivetopdemais');
   }
 
   public function createUser(Request $request, Response $response)
@@ -55,37 +58,22 @@ class UserController
 
   public function loginUser(Request $request, Response $response) 
   {
-    $database = new Database;
-      
-    $userRepository = new UsersRepository($database);
-
     $body = $request->getBody();
     $data = json_decode($body);
     $login = $data->login;
     $senha = $data->senha;
     
-
-    $user = $userRepository->getUser($login, $senha);
-    
+    $user = $this->userRepository->getUser($login, $senha);
     
     if($user) {
       $userData = $user[0];//acessa a primeira posicao do array que contem um objeto
       
-      $authUser = new AuthUser('vrumvrumdrivetopdemais');
-      $token = $authUser->createToken($userData);
-      
-      //gerar um token
-      /*$payload = [
-        'cpf' => $userData['cpf'],
-        'login' => $userData['login'],
-        'senha' => $userData['senha'],
-      ];
-      
-      $jwt = JWT::encode($payload, 'vrumvrumdrivetopdemais', 'HS256');*///args->informacoes, chave secreta, criptografia
 
+      $token = $this->auth->createToken($userData);
+      
+      
       // Retorna o token JWT no cabeçalho de autorização
       $response = $response->withHeader('Authorization', $token);
-
       // Retorne o token JWT na resposta
       $response->getBody()->write(json_encode(['token' => $token]));
        
@@ -95,8 +83,22 @@ class UserController
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
   }
   
+  public function authentication(Request $request, Response $response)
+  {
+    $autorizationHeader = $request->getHeaderLine('Authorization');
+    $authToken = $this->auth->authToken($autorizationHeader);
+      if($authToken == true){
+        $response->getBody()->write(json_encode("Usuario autorizado!"));
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+      }
+      
+
+    $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
+    return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+  }
+  
   public function getBookings(Request $request, Response $response)
   {
     
-  }
+  }  
 }
