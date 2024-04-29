@@ -1,4 +1,4 @@
-<h1>Locadora de Veículos - Backend</h1>
+<h1>VrumDrive - Backend</h1>
 <p>Este é o backend de uma aplicação de locadora de veículos, desenvolvido em PHP utilizando o Slim Framework.</h2>
 
 
