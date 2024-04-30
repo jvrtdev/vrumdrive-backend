@@ -68,12 +68,11 @@ class UserController
     if($user) {
       $userData = $user[0];//acessa a primeira posicao do array que contem um objeto
       
-
       $token = $this->auth->createToken($userData);
-      
       
       // Retorna o token JWT no cabeçalho de autorização
       $response = $response->withHeader('Authorization', $token);
+      
       // Retorne o token JWT na resposta
       $response->getBody()->write(json_encode(['token' => $token]));
        
@@ -86,12 +85,13 @@ class UserController
   public function authentication(Request $request, Response $response)
   {
     $autorizationHeader = $request->getHeaderLine('Authorization');
+
     $authToken = $this->auth->authToken($autorizationHeader);
-      if($authToken == true){
-        $response->getBody()->write(json_encode("Usuario autorizado!"));
-        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-      }
-      
+
+    if($authToken){
+      $response->getBody()->write(json_encode("Usuario autorizado!"));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
 
     $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
@@ -100,5 +100,5 @@ class UserController
   public function getBookings(Request $request, Response $response)
   {
     
-  }  
+  }
 }

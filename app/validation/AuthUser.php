@@ -28,7 +28,6 @@ class AuthUser
 
   }
   
-  
   public function createToken($userData) :string
   {
     $now = time();
@@ -45,8 +44,6 @@ class AuthUser
     
     return $jwt;
   }
-  
-  
 
   public function authToken($token) : bool
   {
@@ -64,17 +61,16 @@ class AuthUser
         $userCpfFromDb = $data[0]->cpf;
         
 
-         if($userCpfToken == $userCpfFromDb ){
-           return true;
-         }
+        if($userCpfToken == $userCpfFromDb ){
+          return true;
+        }
        } catch (Exception $e) {
          print_r($e->getMessage());
          return false;
        }
     }
-    else{
-      print_r("O token inexistente");
-      return false;
-    }
+    print_r("token inexistente");
+    return false;
+    
   }
 }
