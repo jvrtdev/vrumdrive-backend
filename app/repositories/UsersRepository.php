@@ -34,7 +34,7 @@ class UsersRepository
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public function createAddress(array $data_columns): string
+    public function createAddress(array $data_columns): int
     {
         $columns_address = $this->getColumnsAddress();
 
