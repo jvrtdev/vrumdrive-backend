@@ -18,7 +18,7 @@ $app->get('/api/carros', CarroController::class . ':carros');
 
 $app->get('/api/carros/{id}', CarroController::class . ':carros_id');
 
-$app->post('/api/carros/create', CarroController::class . ':createVehicles');
+$app->post('/api/vehicle/create', CarroController::class . ':createVehicle');
 
 $app->post('/api/user/create', UserController::class . ':createUser');
 
