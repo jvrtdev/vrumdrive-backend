@@ -42,4 +42,29 @@ class CarrosRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function createVehicle(array $data_columns): bool
+    {
+        $columns = $this->getColumns();
+
+        array_shift($columns);
+
+        $placeholders = array_map(function($column) 
+        {
+            return ":$column";
+        }, $columns);
+
+        $sql = 'INSERT INTO vehicles (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')';
+
+        $pdo = $this->database->getConnection();
+
+        $stmt = $pdo->prepare($sql);
+
+        for($i = 0; $i < count($columns); $i++)
+        {
+            $stmt->bindValue($placeholders[$i], $data_columns[$columns[$i]]);
+        }
+        
+        return $stmt->execute();
+    }
 }

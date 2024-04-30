@@ -43,4 +43,19 @@ class CarroController
         $response->getBody()->write($body);
         return $response->withHeader('Content-Type', 'application/json');
     }
+
+    public function createVehicle(Request $request, Response $response)
+    {
+        $data = get_object_vars(json_decode($request->getBody()));
+
+        $result = $this->vehicleRepository->createVehicle($data);
+
+        if ($result) 
+        {
+            $response->getBody()->write(json_encode(['message' => 'Vehicle create successfully']));
+            return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+        }
+        $response->getBody()->write(json_encode(['message' => 'Failed to create vehicle']));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
 }

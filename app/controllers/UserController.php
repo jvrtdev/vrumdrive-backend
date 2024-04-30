@@ -29,8 +29,6 @@ class UserController
 
   public function createUser(Request $request, Response $response)
   {
-      $columns = $this->userRepository->getColumns();
-
       $data = get_object_vars(json_decode($request->getBody()));
 
       $erro = $this->validate->cpfValidator($data["cpf"]);
@@ -40,12 +38,7 @@ class UserController
           return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
       }
 
-      for($i = 1; $i < count($columns); $i++)
-      {
-        $data_columns[$columns[$i]] = $data[$columns[$i]];
-      }
-
-      $result = $this->userRepository->createUser($data_columns);
+      $result = $this->userRepository->createUser($data);
 
       if ($result) 
       {
