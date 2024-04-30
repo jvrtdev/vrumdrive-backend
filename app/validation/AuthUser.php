@@ -24,7 +24,7 @@ class AuthUser
       
     $this->userRepository = new UsersRepository($database);
 
-    $this->time = 30;//tempo em segundos de expiracao do token
+    $this->time = 3600;//1 hora = tempo em segundos de expiracao do token
 
   }
   
