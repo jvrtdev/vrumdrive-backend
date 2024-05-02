@@ -31,13 +31,20 @@ class UserController
   public function createUser(Request $request, Response $response)
   {
       $data = get_object_vars(json_decode($request->getBody()));
+      
+      $fields = ['cpf', 'celular', 'telefone'];
+      $errors = [];
 
-      $erro = $this->validate->cpfValidator($data["cpf"]);
-      $erro = $this->validate->celValidator($data["celular"]);
-      $erro = $this->validate->telValidator($data["telefone"]);
-      if($erro)
-      {
-          $response->getBody()->write(json_encode(['message' => $erro]));
+      foreach ($fields as $field) {
+          $validator = $field . 'Validator';
+          $error = $this->validate->$validator($data[$field]);
+          if ($error) {
+              $errors[$field] = $error;
+          }
+      }
+
+      if (!empty($errors)) {
+          $response->getBody()->write(json_encode(['message' => $errors]));
           return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
       }
 
@@ -95,5 +102,4 @@ class UserController
   {
     
   }
-
 }
