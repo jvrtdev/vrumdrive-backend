@@ -55,23 +55,29 @@ class UserController
     $data = json_decode($body);
     $login = $data->login;
     $senha = $data->senha;
+
     
-    $user = $this->userRepository->getUser($login, $senha);
+    $user = $this->userRepository->getUser($login);
     
     if($user) {
       $userData = $user[0];//acessa a primeira posicao do array que contem um objeto
       
-      $token = $this->auth->createToken($userData);
+      $verify = password_verify($senha, $userData["senha"]);
       
-      // Retorna o token JWT no cabeçalho de autorização
-      $response = $response->withHeader('Authorization', $token);
+
+      if ($verify == true){
+        $token = $this->auth->createToken($userData);
       
-      // Retorne o token JWT na resposta
-      $response->getBody()->write(json_encode(['token' => $token]));
-       
-      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        // Retorna o token JWT no cabeçalho de autorização
+        $response = $response->withHeader('Authorization', $token);
+        
+        // Retorne o token JWT na resposta
+        $response->getBody()->write(json_encode(['token' => $token]));
+         
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+      }
     };
-    $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
+    $response->getBody()->write(json_encode(['message' => $verify]));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
   }
   
@@ -94,4 +100,5 @@ class UserController
   {
     
   }
+
 }
