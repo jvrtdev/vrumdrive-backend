@@ -69,6 +69,9 @@ class UsersRepository
     {
         $data_columns["id_address"] = $this->createAddress($data_columns);
 
+        $passwordHash = password_hash($data_columns["senha"], PASSWORD_DEFAULT);
+        $data_columns["senha"] = $passwordHash;
+
         $columns_user = $this->getColumnsUser();
 
         array_shift($columns_user);
@@ -92,16 +95,15 @@ class UsersRepository
         return $stmt->execute();
     }
 
-    public function getUser($login, $senha)
+    public function getUser($login)
     {
-        $sql = 'SELECT * FROM users WHERE login = :login AND senha = :senha';
+        $sql = 'SELECT * FROM users WHERE login = :login';
 
         // Prepara a consulta SQL
         $stmt = $this->database->getConnection()->prepare($sql);
         
         // Substitui o marcador de posição :login pelo valor fornecido
         $stmt->bindValue(':login', $login);
-        $stmt->bindValue(':senha', $senha);
 
         // Executa a consulta
         $stmt->execute();
