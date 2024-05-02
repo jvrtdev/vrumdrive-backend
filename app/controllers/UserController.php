@@ -5,6 +5,7 @@ use App\Database;
 use App\Repositories\UsersRepository;
 use App\Validation\AuthUser;
 use App\Validation\Validate;
+use PDOException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -32,21 +33,25 @@ class UserController
       $data = get_object_vars(json_decode($request->getBody()));
 
       $erro = $this->validate->cpfValidator($data["cpf"]);
+      $erro = $this->validate->celValidator($data["celular"]);
+      $erro = $this->validate->telValidator($data["telefone"]);
       if($erro)
       {
           $response->getBody()->write(json_encode(['message' => $erro]));
           return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
       }
 
-      $result = $this->userRepository->createUser($data);
-
-      if ($result) 
+      try
       {
+        $this->userRepository->createUser($data);
         $response->getBody()->write(json_encode(['message' => 'User created successfully']));
         return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
       }
-      $response->getBody()->write(json_encode(['message' => 'Failed to create user']));
-      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+      catch(PDOException $e)
+      {
+        $response->getBody()->write(json_encode($e->getMessage()));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+      }
   }
 
   public function loginUser(Request $request, Response $response) 
