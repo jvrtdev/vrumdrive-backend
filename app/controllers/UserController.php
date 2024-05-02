@@ -56,33 +56,23 @@ class UserController
 
   public function loginUser(Request $request, Response $response) 
   {
-    $body = $request->getBody();
-    $data = json_decode($body);
-    $login = $data->login;
-    $senha = $data->senha;
+    $data = json_decode($request->getBody());
+    $user = $this->userRepository->getUser($data->login);
 
+    $verify = password_verify($data->senha, $user["senha"]);
     
-    $user = $this->userRepository->getUser($login);
+    if ($verify)
+    {
+      $token = $this->auth->createToken($user);
     
-    if($user) {
-      $userData = $user[0];//acessa a primeira posicao do array que contem um objeto
+      // Retorna o token JWT no cabeçalho de autorização
+      $response = $response->withHeader('Authorization', $token);
       
-      $verify = password_verify($senha, $userData["senha"]);
-      
-
-      if ($verify == true){
-        $token = $this->auth->createToken($userData);
-      
-        // Retorna o token JWT no cabeçalho de autorização
-        $response = $response->withHeader('Authorization', $token);
-        
-        // Retorne o token JWT na resposta
-        $response->getBody()->write(json_encode(['token' => $token]));
-         
-        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-      }
-    };
-    $response->getBody()->write(json_encode(['message' => $verify]));
+      // Retorne o token JWT na resposta
+      $response->getBody()->write(json_encode(['token' => $token]));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
+    $response->getBody()->write(json_encode(['message' => "Failed to conected"]));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
   }
   
@@ -92,11 +82,11 @@ class UserController
 
     $authToken = $this->auth->authToken($autorizationHeader);
 
-    if($authToken){
+    if($authToken)
+    {
       $response->getBody()->write(json_encode("Usuario autorizado!"));
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
-
     $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
   }
