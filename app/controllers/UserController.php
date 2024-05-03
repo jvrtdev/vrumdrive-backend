@@ -105,14 +105,12 @@ class UserController
 
   public function deleteUser(Request $request, Response $response)
   {
-  
     $dUser = $this->userRepository->deleteUser(json_decode($request->getBody()));
 
     if ($dUser)
     {
-      $response->getBody()->write(json_encode(['message' => 'Usuer deleted sucessfull']));
+      $response->getBody()->write(json_encode(['message' => 'User deleted successfully']));
       return $response->withHeader('Content-Type', 'application/json');
     }
   }
-
 }
