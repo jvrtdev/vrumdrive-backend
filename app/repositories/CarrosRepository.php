@@ -67,4 +67,14 @@ class CarrosRepository
         
         return $stmt->execute();
     }
+    public function deleteVehicles($id) 
+    {
+        $sql = 'DELETE FROM vehicles WHERE id = ' . $id;
+
+        $stmt = $this->database->getConnection()->prepare($sql);
+        
+        $stmt->execute();
+
+        return $stmt;
+    }
 }
