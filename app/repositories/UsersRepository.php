@@ -9,27 +9,23 @@ use PDO;
 
 class UsersRepository
 {   
-    protected $database;
+    protected $pdo;
 
     public function __construct(Database $database)
     {
-        $this->database = $database;
+        $this->pdo = $database->getConnection();
     }
 
     public function getColumnsUser(): array
     {
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->query('SHOW COLUMNS FROM users');
+        $stmt = $this->pdo->query('SHOW COLUMNS FROM users');
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     public function getColumnsAddress(): array
     {
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->query('SHOW COLUMNS FROM address');
+        $stmt = $this->pdo->query('SHOW COLUMNS FROM address');
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -47,9 +43,7 @@ class UsersRepository
 
         $sql = 'INSERT INTO address (' . implode(', ', $columns_address) . ') VALUES (' . implode(', ', $placeholders_address) . ')';
 
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
         for($i = 0; $i < count($columns_address); $i++)
         {
@@ -58,7 +52,7 @@ class UsersRepository
         
         $stmt->execute();
 
-        $stmt = $pdo->query('SELECT LAST_INSERT_ID()');
+        $stmt = $this->pdo->query('SELECT LAST_INSERT_ID()');
 
         $id_address = $stmt->fetch();
 
@@ -83,9 +77,7 @@ class UsersRepository
 
         $sql = 'INSERT INTO users (' . implode(', ', $columns_user) . ') VALUES (' . implode(', ', $placeholders_user) . ')';
 
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
         for($i = 0; $i < count($columns_user); $i++)
         {
@@ -100,7 +92,7 @@ class UsersRepository
         $sql = 'SELECT * FROM users WHERE login = :login';
 
         // Prepara a consulta SQL
-        $stmt = $this->database->getConnection()->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         
         // Substitui o marcador de posição :login pelo valor fornecido
         $stmt->bindValue(':login', $login);
@@ -116,7 +108,7 @@ class UsersRepository
     {
         $sql = 'SELECT cpf FROM users WHERE cpf = :cpf';
 
-        $stmt = $this->database->getConnection()->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         
         $stmt->bindValue(':cpf', $cpf);
         
@@ -129,7 +121,7 @@ class UsersRepository
     {
         $sql = 'DELETE FROM users WHERE cpf = ' . "'$cpf'";
 
-        $stmt = $this->database->getConnection()->query($sql);
+        $stmt = $this->pdo->query($sql);
 
         return $stmt;
     }
