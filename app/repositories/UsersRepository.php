@@ -124,4 +124,13 @@ class UsersRepository
 
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public function deleteUser($cpf)
+    {
+        $sql = 'DELETE FROM users WHERE cpf = ' . "'$cpf'";
+
+        $stmt = $this->database->getConnection()->query($sql);
+
+        return $stmt;
+    }
 }
