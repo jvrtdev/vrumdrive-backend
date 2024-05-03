@@ -28,4 +28,6 @@ $app->post('/api/auth', UserController::class . ':authentication');
 
 $app->delete('/api/user/delete', UserController::class . ':deleteUser');
 
+$app->delete('/api/vehicle/delete', CarroController::class . ':deleteVehicles');
+
 $app->run();
