@@ -8,37 +8,31 @@ use App\Database;
 use PDO;
 
 class CarrosRepository
-{   
-    protected $database;
+{
+    protected $pdo;
 
     public function __construct(Database $database)
     {
-        $this->database = $database;
+        $this->pdo = $database->getConnection();
     }
 
     public function getColumns(): array
     {
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->query('SHOW COLUMNS FROM vehicles');
+        $stmt = $this->pdo->query('SHOW COLUMNS FROM vehicles');
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     public function getVehicles(): array
     {
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->query('SELECT * FROM vehicles');
+        $stmt = $this->pdo->query('SELECT * FROM vehicles');
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     public function listarVeiculosId($args): array
     {
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->query('SELECT * FROM vehicles WHERE id = '.$args["id"]);
+        $stmt = $this->pdo->query('SELECT * FROM vehicles WHERE id = '.$args["id"]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -56,9 +50,7 @@ class CarrosRepository
 
         $sql = 'INSERT INTO vehicles (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')';
 
-        $pdo = $this->database->getConnection();
-
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
         for($i = 0; $i < count($columns); $i++)
         {
@@ -67,14 +59,12 @@ class CarrosRepository
         
         return $stmt->execute();
     }
-    public function deleteVehicles($id) 
+    public function deleteVehicles($id): bool
     {
         $sql = 'DELETE FROM vehicles WHERE id = ' . $id;
 
-        $stmt = $this->database->getConnection()->prepare($sql);
-        
-        $stmt->execute();
+        $stmt = $this->pdo->prepare($sql);
 
-        return $stmt;
+        return $stmt->execute();
     }
 }
