@@ -110,7 +110,7 @@ class UserController
 
     if ($dUser)
     {
-      $response->getBody()->write(json_encode(['message' => 'Usuer deleted sucessfull']));
+      $response->getBody()->write(json_encode(['message' => 'User deleted successfully']));
       return $response->withHeader('Content-Type', 'application/json');
     }
   }
