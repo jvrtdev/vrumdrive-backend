@@ -63,7 +63,8 @@ class CarroController
     {
         $dVehicles = $this->vehicleRepository->deleteVehicles(json_decode($request->getBody())->id);
         
-        if($dVehicles){
+        if($dVehicles)
+        {
           $response->getBody()->write(json_encode(['message' => 'Delete vehicle successfully']));
           return $response->withHeader('Content-Type', 'application/json');
         }
