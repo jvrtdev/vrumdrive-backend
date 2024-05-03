@@ -26,4 +26,6 @@ $app->post('/api/user/login', UserController::class . ':loginUser');
 
 $app->post('/api/auth', UserController::class . ':authentication');
 
+$app->delete('/api/user/delete', UserController::class . ':deleteUser');
+
 $app->run();
