@@ -105,7 +105,6 @@ class UserController
 
   public function deleteUser(Request $request, Response $response)
   {
-  
     $dUser = $this->userRepository->deleteUser(json_decode($request->getBody()));
 
     if ($dUser)
@@ -114,5 +113,4 @@ class UserController
       return $response->withHeader('Content-Type', 'application/json');
     }
   }
-
 }
