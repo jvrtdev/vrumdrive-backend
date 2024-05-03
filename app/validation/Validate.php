@@ -39,7 +39,7 @@ class Validate
       return false;
     }
 
-    public function celValidator($cel)
+    public function celularValidator($cel)
     {
         if(strlen($cel) != 17)
         {
@@ -52,7 +52,7 @@ class Validate
         }
     }
 
-    public function telValidator($tel)
+    public function telefoneValidator($tel)
     {
         if(strlen($tel) != 16)
         {

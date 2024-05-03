@@ -109,7 +109,7 @@ class UsersRepository
         $stmt->execute();
 
         // Retorna os resultados como um array associativo
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
     public function getAuth($cpf)
