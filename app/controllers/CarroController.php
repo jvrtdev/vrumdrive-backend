@@ -23,7 +23,7 @@ class CarroController
         return $response;
     }
     
-    public function carros(Request $request, Response $response) 
+    public function cars(Request $request, Response $response) 
     {
         $data = $this->vehicleRepository->getVehicles();
 
@@ -33,7 +33,7 @@ class CarroController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function carros_id(Request $request, Response $response, $args)
+    public function carsId(Request $request, Response $response, $args)
     //falta alterar essa função usando repository
     {
         $data = $this->vehicleRepository->listarVeiculosId($args);
@@ -68,5 +68,10 @@ class CarroController
           $response->getBody()->write(json_encode(['message' => 'Delete vehicle successfully']));
           return $response->withHeader('Content-Type', 'application/json');
         }
+    }
+
+    public function updateVehicles(Request $request, Response $response)
+    {
+
     }
 }
