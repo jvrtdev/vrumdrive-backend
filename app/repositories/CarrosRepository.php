@@ -67,4 +67,9 @@ class CarrosRepository
 
         return $stmt->execute();
     }
+
+    public function updateVehicles()
+    {
+
+    }
 }
