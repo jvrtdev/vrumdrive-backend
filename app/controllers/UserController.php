@@ -113,4 +113,9 @@ class UserController
       return $response->withHeader('Content-Type', 'application/json');
     }
   }
+
+  public function updateUser(Request $request, Response $response)
+  {
+
+  }
 }
