@@ -125,4 +125,9 @@ class UsersRepository
 
         return $stmt;
     }
+
+    public function updateUser()
+    {
+
+    }
 }
