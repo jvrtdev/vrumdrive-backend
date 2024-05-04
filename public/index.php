@@ -14,11 +14,15 @@ $app = AppFactory::create();
 
 $app->get('/', CarroController::class . ':hello');
 
-$app->get('/api/carros', CarroController::class . ':carros');
+$app->get('/api/cars', CarroController::class . ':cars');
 
-$app->get('/api/carros/{id}', CarroController::class . ':carros_id');
+$app->get('/api/cars/{id}', CarroController::class . ':carsID');
 
 $app->post('/api/vehicle/create', CarroController::class . ':createVehicle');
+
+$app->delete('/api/vehicle/delete', CarroController::class . ':deleteVehicles');
+
+$app->put('/api/vehicle/update', CarroController::class . ':updateVehicles');
 
 $app->post('/api/user/create', UserController::class . ':createUser');
 
@@ -28,6 +32,6 @@ $app->post('/api/auth', UserController::class . ':authentication');
 
 $app->delete('/api/user/delete', UserController::class . ':deleteUser');
 
-$app->delete('/api/vehicle/delete', CarroController::class . ':deleteVehicles');
+$app->put('/api/user/update', UserController::class . ':updateUser:');
 
 $app->run();
