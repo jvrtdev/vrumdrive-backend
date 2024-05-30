@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Database;
 use App\Repositories\CarrosRepository;
+use PDOException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -70,8 +71,19 @@ class CarroController
         }
     }
 
-    public function updateVehicles(Request $request, Response $response)
+    public function updateVehicles(Request $request, Response $response, $args)
     {
+        $data = json_decode($request->getBody());
 
+        try{
+            $vehicle = $this->vehicleRepository->updateVehicles($data, $args);
+            $response->getBody()->write(json_encode(['message' => $vehicle]));
+            return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+        }catch(PDOException $e){
+            $response->getBody()->write(json_encode(['message' => $e]));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            
+
+        }
     }
 }

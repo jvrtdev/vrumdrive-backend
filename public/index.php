@@ -22,7 +22,7 @@ $app->post('/api/vehicle/create', CarroController::class . ':createVehicle');
 
 $app->delete('/api/vehicle/delete', CarroController::class . ':deleteVehicles');
 
-$app->put('/api/vehicle/update', CarroController::class . ':updateVehicles');
+$app->put('/api/vehicle/update/{id}', CarroController::class . ':updateVehicles');
 
 $app->post('/api/user/create', UserController::class . ':createUser');
 
@@ -32,6 +32,6 @@ $app->post('/api/auth', UserController::class . ':authentication');
 
 $app->delete('/api/user/delete', UserController::class . ':deleteUser');
 
-$app->put('/api/user/update', UserController::class . ':updateUser:');
+$app->put('/api/user/update/{id}', UserController::class . ':updateUser:');
 
 $app->run();

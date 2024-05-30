@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Database;
 use PDO;
+use PDOException;
 
 class CarrosRepository
 {
@@ -68,8 +69,35 @@ class CarrosRepository
         return $stmt->execute();
     }
 
-    public function updateVehicles()
+    public function updateVehicles($data, $id)
     {
-
+        $fields = [];
+        $values = [];
+    
+        foreach ($data as $key => $value){
+            $fields[] = "$key = :$key ";
+            $values[":$key"] = $value; // Adicione ':' ao nome do parâmetro
+        }
+    
+        $fields = implode(", ", $fields);
+        
+        $sql = "UPDATE vehicles SET $fields WHERE id = :id";
+    
+        $stmt = $this->pdo->prepare($sql);
+    
+        $values[':id'] = $id; // Adicione o ID ao array de valores
+    
+        try {
+            $stmt->execute($values);
+    
+            if ($stmt->rowCount() > 0) {
+                return true; // Atualização bem-sucedida
+            } else {
+                return false; // Nenhuma linha afetada
+            }
+        } catch (PDOException $e) {
+            // Log do erro ou outra manipulação de erro
+            return false;
+        }
     }
 }
