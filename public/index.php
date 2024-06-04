@@ -10,6 +10,8 @@ require __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+$app = AppFactory::create();
+
 //autoriza a rota options 
 $app->options('/{routes:.+}', function ($request, $response, $args) {
   return $response;
@@ -23,9 +25,6 @@ $app->add(function ($request, $handler) {
     ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
-
-
-$app = AppFactory::create();
 
 $app->get('/', CarroController::class . ':hello');
 
