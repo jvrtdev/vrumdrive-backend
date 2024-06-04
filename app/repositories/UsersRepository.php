@@ -87,6 +87,35 @@ class UsersRepository
         return $stmt->execute();
     }
 
+    public function updateUser(array $data_columns): bool
+    {
+        $columns_user = $this->getColumnsUser();
+
+        foreach($columns_user as $key => $values){
+            foreach($data_columns as $key2 => $values2){
+                if($key == $key2){
+                    
+                }
+            }
+        }
+
+        $placeholders_user = array_map(function($column) 
+        {
+            return ":$column";
+        }, $columns_user);
+
+        $sql = 'INSERT INTO users (' . implode(', ', $columns_user) . ') VALUES (' . implode(', ', $placeholders_user) . ')';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        for($i = 0; $i < count($columns_user); $i++)
+        {
+            $stmt->bindValue($placeholders_user[$i], $data_columns[$columns_user[$i]]);
+        }
+        
+        return $stmt->execute();
+    }
+
     public function getUser($login)
     {
         $sql = 'SELECT * FROM users WHERE login = :login';
@@ -124,10 +153,5 @@ class UsersRepository
         $stmt = $this->pdo->query($sql);
 
         return $stmt;
-    }
-
-    public function updateUser()
-    {
-
     }
 }
