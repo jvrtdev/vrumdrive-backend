@@ -87,17 +87,20 @@ class UsersRepository
         return $stmt->execute();
     }
 
-    public function updateUser(array $data_columns): bool
+    public function updateUser(array $data_columns)
     {
         $columns_user = $this->getColumnsUser();
+        $teste = 0;
 
         foreach($columns_user as $key => $values){
             foreach($data_columns as $key2 => $values2){
                 if($key == $key2){
-                    
+                    $teste++;
                 }
             }
         }
+
+        return $teste;
 
         $placeholders_user = array_map(function($column) 
         {

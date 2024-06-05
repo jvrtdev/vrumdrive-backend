@@ -116,6 +116,11 @@ class UserController
 
   public function updateUser(Request $request, Response $response)
   {
+    $data = get_object_vars(json_decode($request->getBody()));
 
+    $teste = $this->userRepository->updateUser($data);
+
+    $response->getBody()->write(json_encode(['message' => $teste]));
+    return $response->withHeader('Content-Type', 'application/json');
   }
 }
