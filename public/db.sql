@@ -1,3 +1,12 @@
+CREATE TABLE address (
+  id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  cep VARCHAR(9) NOT NULL,
+  state VARCHAR(2) NOT NULL,
+  city VARCHAR(30) NOT NULL,
+  lograduro VARCHAR(40) NOT NULL,
+  number INT NOT NULL
+);
+
 CREATE TABLE users (
   id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_address INT NOT NULL,
@@ -13,15 +22,6 @@ CREATE TABLE users (
   senha VARCHAR(255) NOT NULL,
 
   FOREIGN KEY(id_address) REFERENCES address(id_address)
-);
-
-CREATE TABLE address (
-  id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  cep VARCHAR(9) NOT NULL,
-  state VARCHAR(2) NOT NULL,
-  city VARCHAR(30) NOT NULL,
-  lograduro VARCHAR(40) NOT NULL,
-  number INT NOT NULL
 );
 
 CREATE TABLE vehicles (
