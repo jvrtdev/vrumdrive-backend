@@ -8,6 +8,7 @@ CREATE TABLE users (
   cpf VARCHAR(15) NOT NULL,
   email VARCHAR(80) NOT NULL,
   celular VARCHAR(17) NOT NULL,
+  telefone VARCHAR(16) NOT NULL,
   login VARCHAR(6) NOT NULL,
   senha VARCHAR(255) NOT NULL,
 
@@ -31,11 +32,12 @@ CREATE TABLE vehicles_details (
   quilometragem VARCHAR NOT NULL,
   motor VARCHAR(30) NOT NULL,
   cor VARCHAR(30) NOT NULL,
-  preco FLOAT NOT NULL,
   detalhes TEXT NOT NULL,
+  portas INT NOT NULL,
+  mala INT NOT NULL,
+  ar_condicionado BOOLEAN NOT NULL
 
   FOREIGN KEY(id_vehicle) REFERENCES vehicles(id)
-
 );
 
 CREATE TABLE bookings (
@@ -47,7 +49,7 @@ CREATE TABLE bookings (
   total_price FLOAT NOT NULL,
 
   FOREIGN KEY(id_user) REFERENCES users(id_user),
-  FOREIGN KEY(id_car) REFERENCES cars(id_car)
+  FOREIGN KEY(id_vehicle) REFERENCES vehicles(id_vehicle)
 );
 
 CREATE TABLE address (
@@ -56,6 +58,6 @@ CREATE TABLE address (
   state VARCHAR(2) NOT NULL,
   city VARCHAR(30) NOT NULL,
   address VARCHAR(40) NOT NULL,
-  number INT
+  number INT NOT NULL
 );
 
