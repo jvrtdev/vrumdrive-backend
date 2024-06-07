@@ -1,5 +1,5 @@
 CREATE TABLE users (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_address INT NOT NULL,
   nome VARCHAR(50) NOT NULL,
   data_nasc DATE NOT NULL,
@@ -15,8 +15,17 @@ CREATE TABLE users (
   FOREIGN KEY(id_address) REFERENCES address(id_address)
 );
 
+CREATE TABLE address (
+  id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  cep VARCHAR(9) NOT NULL,
+  state VARCHAR(2) NOT NULL,
+  city VARCHAR(30) NOT NULL,
+  address VARCHAR(40) NOT NULL,
+  number INT NOT NULL
+);
+
 CREATE TABLE vehicles (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_vehicle INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   img VARCHAR(30) NOT NULL,
   modelo VARCHAR(30) NOT NULL,
   marca VARCHAR(30) NOT NULL,
@@ -27,23 +36,23 @@ CREATE TABLE vehicles (
 );
 
 CREATE TABLE vehicles_details (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_details INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_vehicle INT NOT NULL,
-  quilometragem VARCHAR NOT NULL,
+  quilometragem VARCHAR(250) NOT NULL,
   motor VARCHAR(30) NOT NULL,
   cor VARCHAR(30) NOT NULL,
   detalhes TEXT NOT NULL,
   portas INT NOT NULL,
   mala INT NOT NULL,
   ar_condicionado BOOLEAN NOT NULL
-
-  FOREIGN KEY(id_vehicle) REFERENCES vehicles(id)
+  
+  FOREIGN KEY(id_vehicle) REFERENCES vehicles(id_vehicle)
 );
 
 CREATE TABLE bookings (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  vehicle_id INT NOT NULL,
+  id_booking INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_user INT NOT NULL,
+  id_vehicle INT NOT NULL,
   pickup_date_time DATETIME NOT NULL,
   return_date_time DATETIME NOT NULL,
   total_price FLOAT NOT NULL,
@@ -51,13 +60,3 @@ CREATE TABLE bookings (
   FOREIGN KEY(id_user) REFERENCES users(id_user),
   FOREIGN KEY(id_vehicle) REFERENCES vehicles(id_vehicle)
 );
-
-CREATE TABLE address (
-  id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  cep VARCHAR(9) NOT NULL,
-  state VARCHAR(2) NOT NULL,
-  city VARCHAR(30) NOT NULL,
-  address VARCHAR(40) NOT NULL,
-  number INT NOT NULL
-);
-
