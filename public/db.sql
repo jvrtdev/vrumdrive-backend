@@ -1,10 +1,10 @@
 CREATE TABLE address (
   id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   cep VARCHAR(9) NOT NULL,
-  state VARCHAR(2) NOT NULL,
-  city VARCHAR(30) NOT NULL,
-  lograduro VARCHAR(40) NOT NULL,
-  number INT NOT NULL
+  estado VARCHAR(2) NOT NULL,
+  cidade VARCHAR(30) NOT NULL,
+  logradouro VARCHAR(40) NOT NULL,
+  numero INT NOT NULL
 );
 
 CREATE TABLE users (
