@@ -20,7 +20,7 @@ CREATE TABLE address (
   cep VARCHAR(9) NOT NULL,
   state VARCHAR(2) NOT NULL,
   city VARCHAR(30) NOT NULL,
-  address VARCHAR(40) NOT NULL,
+  lograduro VARCHAR(40) NOT NULL,
   number INT NOT NULL
 );
 
