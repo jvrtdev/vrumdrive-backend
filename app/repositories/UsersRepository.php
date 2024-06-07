@@ -90,24 +90,24 @@ class UsersRepository
     public function updateUser(array $data_columns)
     {
         $columns_user = $this->getColumnsUser();
-        $teste = 0;
 
         foreach($columns_user as $key => $values){
             foreach($data_columns as $key2 => $values2){
                 if($key == $key2){
-                    $teste++;
+                    $exist = true;
                 }
             }
+            if(!$exist){
+                unset($columns_user[$key]);
+            }
         }
-
-        return $teste;
 
         $placeholders_user = array_map(function($column) 
         {
             return ":$column";
         }, $columns_user);
 
-        $sql = 'INSERT INTO users (' . implode(', ', $columns_user) . ') VALUES (' . implode(', ', $placeholders_user) . ')';
+        $sql = 'UPDATE users SET (' . implode(', ', $columns_user) . ') (' . implode(', ', $placeholders_user) . ')';
 
         $stmt = $this->pdo->prepare($sql);
 
