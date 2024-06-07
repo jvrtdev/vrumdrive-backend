@@ -44,7 +44,7 @@ CREATE TABLE vehicles_details (
   detalhes TEXT NOT NULL,
   portas INT NOT NULL,
   mala INT NOT NULL,
-  ar_condicionado BOOLEAN NOT NULL
+  ar_condicionado BOOLEAN NOT NULL,
   
   FOREIGN KEY(id_vehicle) REFERENCES vehicles(id_vehicle)
 );
