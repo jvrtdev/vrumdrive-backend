@@ -11,6 +11,8 @@
             "App\\Controllers\\": "./app/controllers/",
             "App\\Repositories\\": "./app/repositories/",
             "App\\Validation\\": "./app/validation/",
+            "App\\Middleware\\": "./app/middleware/",
+            "App\\Routes\\": "./app/routes/",
             "App\\" : "./app/"
         }
     }
