@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use App\Controllers\CarroController;
 use App\Controllers\UserController;
+use App\Controllers\VehicleController;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -26,17 +26,18 @@ $app->add(function ($request, $handler) {
     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
 
-$app->get('/', CarroController::class . ':hello');
+/*
+$app->get('/', VehicleController::class . ':hello');
 
-$app->get('/api/cars', CarroController::class . ':cars');
+$app->get('/api/cars', VehicleController::class . ':cars');
 
-$app->get('/api/cars/{id}', CarroController::class . ':carsID');
+$app->get('/api/cars/{id}', VehicleController::class . ':carsID');
 
-$app->post('/api/vehicle/create', CarroController::class . ':createVehicle');
+$app->post('/api/vehicle/create', VehicleController::class . ':createVehicle');
 
-$app->delete('/api/vehicle/delete', CarroController::class . ':deleteVehicles');
+$app->delete('/api/vehicle/delete', VehicleController::class . ':deleteVehicles');
 
-$app->put('/api/vehicle/update/{id}', CarroController::class . ':updateVehicles');
+$app->put('/api/vehicle/update/{id}', VehicleController::class . ':updateVehicles');
 
 $app->post('/api/user/create', UserController::class . ':createUser');
 
@@ -44,8 +45,14 @@ $app->post('/api/user/login', UserController::class . ':loginUser');
 
 $app->post('/api/auth', UserController::class . ':authentication');
 
-$app->delete('/api/user/delete', UserController::class . ':deleteUser');
+$app->delete('/api/user/delete/{id}', UserController::class . ':deleteUser');
 
 $app->put('/api/user/update/{id}', UserController::class . ':updateUser');
+*/
+
+//rotas da aplicacao
+(require __DIR__ . "/../app/routes/users.php")($app);
+(require __DIR__ . "/../app/routes/vehicles.php")($app);
+(require __DIR__ . "/../app/routes/bookings.php")($app);
 
 $app->run();
