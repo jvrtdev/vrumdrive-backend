@@ -87,13 +87,14 @@ class UsersRepository
         return $stmt->execute();
     }
 
-    public function updateUser(array $data_columns)
+    public function updateUser(array $data_columns, $args)
     {
         $columns_user = $this->getColumnsUser();
-
-        foreach($columns_user as $key => $values){
+        
+        foreach($columns_user as $key => $values){ 
+            $exist = false;
             foreach($data_columns as $key2 => $values2){
-                if($key == $key2){
+                if($values == $key2){
                     $exist = true;
                 }
             }
@@ -101,14 +102,21 @@ class UsersRepository
                 unset($columns_user[$key]);
             }
         }
-
+        sort($columns_user);
+        
         $placeholders_user = array_map(function($column) 
         {
             return ":$column";
         }, $columns_user);
+         
+        $update = "";
+        for($i = 0; $i < count($columns_user); $i++)
+        {
+            $update = $update . ", " . $columns_user[$i] . " = " . $placeholders_user[$i];
+        }
+        $update = substr($update, 2);
 
-        $sql = 'UPDATE users SET (' . implode(', ', $columns_user) . ') (' . implode(', ', $placeholders_user) . ')';
-
+        $sql = 'UPDATE users SET ' . $update . ' WHERE id_user = ' . $args["id"];
         $stmt = $this->pdo->prepare($sql);
 
         for($i = 0; $i < count($columns_user); $i++)

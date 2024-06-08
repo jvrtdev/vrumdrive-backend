@@ -46,6 +46,6 @@ $app->post('/api/auth', UserController::class . ':authentication');
 
 $app->delete('/api/user/delete', UserController::class . ':deleteUser');
 
-$app->put('/api/user/update', UserController::class . ':updateUser:');
+$app->put('/api/user/update/{id}', UserController::class . ':updateUser');
 
 $app->run();
