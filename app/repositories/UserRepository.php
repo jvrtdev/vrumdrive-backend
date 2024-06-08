@@ -7,7 +7,7 @@ namespace App\Repositories;
 use App\Database;
 use PDO;
 
-class UsersRepository
+class UserRepository
 {   
     protected $pdo;
 
@@ -157,12 +157,29 @@ class UsersRepository
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function deleteUser($cpf)
+    public function deleteUserById($id)
     {
-        $sql = 'DELETE FROM users WHERE cpf = ' . "'$cpf'";
+        $sql = 'DELETE FROM users WHERE id = :id';
 
-        $stmt = $this->pdo->query($sql);
+        $stmt = $this->pdo->prepare($sql);
+        
+        $stmt->bindValue(':id', $id);
 
-        return $stmt;
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserById($id)
+    {
+        $sql = 'SELECT * FROM users WHERE id = :id';
+        
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':id', $id);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
