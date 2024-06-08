@@ -55,6 +55,7 @@ CREATE TABLE bookings (
   id_vehicle INT NOT NULL,
   pickup_date_time DATETIME NOT NULL,
   return_date_time DATETIME NOT NULL,
+  location VARCHAR(30) NOT NULL,
   total_price FLOAT NOT NULL,
 
   FOREIGN KEY(id_user) REFERENCES users(id_user),
