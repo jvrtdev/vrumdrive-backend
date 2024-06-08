@@ -2,7 +2,7 @@
 namespace App\Controllers;
 
 use App\Database;
-use App\Repositories\UsersRepository;
+use App\Repositories\UserRepository;
 use App\Validation\AuthUser;
 use App\Validation\Validate;
 use PDOException;
@@ -21,7 +21,7 @@ class UserController
   {
       $database = new Database;
       
-      $this->userRepository = new UsersRepository($database);
+      $this->userRepository = new UserRepository($database);
 
       $this->validate = new Validate();
       
@@ -64,63 +64,80 @@ class UserController
   public function loginUser(Request $request, Response $response) 
   {
     $data = json_decode($request->getBody());
-    $user = $this->userRepository->getUser($data->login);
+    try{
+      $user = $this->userRepository->getUser($data->login);
 
-    $verify = password_verify($data->senha, $user["senha"]);
-    
-    if ($verify)
-    {
-      $token = $this->auth->createToken($user);
-    
-      // Retorna o token JWT no cabeçalho de autorização
-      $response = $response->withHeader('Authorization', $token);
+      $verify = password_verify($data->senha, $user["senha"]);
       
-      // Retorne o token JWT na resposta
-      $response->getBody()->write(json_encode(['token' => $token]));
-      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+      if ($verify)
+      {
+        $token = $this->auth->createToken($user);
+      
+        // Retorna o token JWT no cabeçalho de autorização
+        $response = $response->withHeader('Authorization', $token);
+        
+        // Retorne o token JWT na resposta
+        $response->getBody()->write(json_encode(['token' => $token]));
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+      }
     }
-    $response->getBody()->write(json_encode(['message' => "Failed to conected"]));
-    return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
-  }
-  
-  public function authentication(Request $request, Response $response)
-  {
-    $autorizationHeader = $request->getHeaderLine('Authorization');
-
-    $authToken = $this->auth->authToken($autorizationHeader);
-
-    if($authToken)
+    catch(PDOException $e)
     {
-      $response->getBody()->write(json_encode("Usuario autorizado!"));
-      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-    }
-    $response->getBody()->write(json_encode(['message' => 'Failed to authenticate']));
+      $response->getBody()->write(json_encode($e->getMessage()));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
-  }
-  
-  public function getBookings(Request $request, Response $response)
-  {
+    }
+      
     
   }
+  
+ 
 
-  public function deleteUser(Request $request, Response $response)
+  public function deleteUser(Request $request, Response $response, $args)
   {
-    $dUser = $this->userRepository->deleteUser(json_decode($request->getBody())->cpf);
-
-    if ($dUser)
+    $data = $args['id'];
+    
+    try{
+      $deletedUser = $this->userRepository->deleteUserById($data);
+      $response->getBody()->write(json_encode($deletedUser));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
     {
-      $response->getBody()->write(json_encode(['message' => 'User deleted successfully']));
-      return $response->withHeader('Content-Type', 'application/json');
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
   }
 
   public function updateUser(Request $request, Response $response, $args)
   {
     $data = get_object_vars(json_decode($request->getBody()));
+    
+    try{
+      $this->userRepository->updateUser($data, $args);
 
-    $this->userRepository->updateUser($data, $args);
+      $response->getBody()->write(json_encode(['message' => "sucesso"]));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+      
+  }
 
-    $response->getBody()->write(json_encode(['message' => "sucesso"]));
-    return $response->withHeader('Content-Type', 'application/json');
+  public function getUserById(Request $request, Response $response, $args)
+  {
+    try{
+      $user = $this->userRepository->getUserById($args['id']);
+      $response->getBody()->write(json_encode($user));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }  
+    
   }
 }
