@@ -31,11 +31,11 @@ class VehicleRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function getVehicleById($args): array
+    public function getVehicleById($id): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM vehicles WHERE id = '.$args["id"]);
+        $stmt = $this->pdo->query('SELECT * FROM vehicles WHERE id_vehicle = '.$id);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
     public function createVehicle(array $data_columns): bool
