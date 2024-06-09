@@ -2,7 +2,7 @@
 
 use Slim\Routing\RouteCollectorProxy;
 use App\Controllers\VehicleController;
-use Middleware\JwtMiddleware;
+use App\Middleware\AuthJwt;
 
 return function ($app) {
     // Rotas sem JWT
@@ -13,5 +13,5 @@ return function ($app) {
     $app->group('/api', function (RouteCollectorProxy $group) {
       $group->post('/vehicle/create', VehicleController::class . ':createVehicle');
       $group->delete('/vehicle/delete/{id}', VehicleController::class . ':deleteVehicleById');
-    })->add(new JwtMiddleware());
+    })->add(new AuthJwt());
 };
