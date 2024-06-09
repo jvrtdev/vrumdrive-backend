@@ -2,7 +2,7 @@
 namespace App\Validation;
 
 use App\Database;
-use App\Repositories\UsersRepository;
+use App\Repositories\UserRepository;
 use Exception;
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -22,9 +22,9 @@ class AuthUser
     
     $database = new Database;
       
-    $this->userRepository = new UsersRepository($database);
+    $this->userRepository = new UserRepository($database);
 
-    $this->time = 3600;//1 hora = tempo em segundos de expiracao do token
+    $this->time = 86400;//1 hora = tempo em segundos de expiracao do token
 
   }
   
@@ -34,7 +34,7 @@ class AuthUser
     $expirationTime = $now + $this->time;
 
     $payload = [
-      'cpf' => $userData['cpf'],
+      'id' => $userData['id_user'],
       'login' => $userData['login'],
       'senha' => $userData['senha'],
       'exp' => $expirationTime,
