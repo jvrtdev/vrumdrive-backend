@@ -13,6 +13,7 @@
             "App\\Validation\\": "./app/validation/",
             "App\\Middleware\\": "./app/middleware/",
             "App\\Routes\\": "./app/routes/",
+            "App\\Services\\": "./app/services/",
             "App\\" : "./app/"
         }
     }
