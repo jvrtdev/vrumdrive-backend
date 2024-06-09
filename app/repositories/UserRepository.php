@@ -83,8 +83,9 @@ class UserRepository
         {
             $stmt->bindValue($placeholders_user[$i], $data_columns[$columns_user[$i]]);
         }
+        $stmt->execute();
         
-        return $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function updateUser(array $data_columns, $args)
