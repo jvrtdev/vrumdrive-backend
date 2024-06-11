@@ -128,7 +128,7 @@ class UserRepository
         return $stmt->execute();
     }
 
-    public function getUser($login)
+    public function getUserLogin($login)
     {
         $sql = 'SELECT * FROM users WHERE login = :login';
 
@@ -178,6 +178,17 @@ class UserRepository
         $stmt = $this->pdo->prepare($sql);
 
         $stmt->bindValue(':id', $id);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUsers()
+    {
+        $sql = 'SELECT * FROM users';
+        
+        $stmt = $this->pdo->prepare($sql);
 
         $stmt->execute();
 
