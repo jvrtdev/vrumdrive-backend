@@ -14,7 +14,7 @@ class AuthJwt
 
     public function __construct()
     {
-      $this->secret_key = "minhachavesecreta";
+      $this->secret_key = "vrumvrumdrivetopdemais";
     }
 
     public function __invoke(Request $request, RequestHandler $handler): Response
