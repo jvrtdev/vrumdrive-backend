@@ -28,6 +28,16 @@ class UserController
       $this->auth = new AuthUser('vrumvrumdrivetopdemais');
   }
 
+  public function getUsers(Request $request, Response $response) 
+  {
+      $data = $this->userRepository->getUsers();
+
+      $body = json_encode($data);  
+      
+      $response->getBody()->write($body);
+      return $response->withHeader('Content-Type', 'application/json');
+  }
+
   public function createUser(Request $request, Response $response)
   {
       $data = get_object_vars(json_decode($request->getBody()));
@@ -65,7 +75,7 @@ class UserController
   {
     $data = json_decode($request->getBody());
     try{
-      $user = $this->userRepository->getUser($data->login);
+      $user = $this->userRepository->getUserLogin($data->login);
 
       $verify = password_verify($data->senha, $user["senha"]);
       
@@ -74,7 +84,7 @@ class UserController
         $token = $this->auth->createToken($user);
       
         // Retorna o token JWT no cabeçalho de autorização
-        $response = $response->withHeader('Authorization', $token);
+        $response->withHeader('Authorization', $token);
         
         // Retorne o token JWT na resposta
         $response->getBody()->write(json_encode(['token' => $token]));
