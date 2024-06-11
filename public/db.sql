@@ -17,7 +17,7 @@ CREATE TABLE users (
   cpf VARCHAR(15) NOT NULL,
   email VARCHAR(80) NOT NULL,
   celular VARCHAR(17) NOT NULL,
-  telefone VARCHAR(16) NOT NULL,
+  telefone VARCHAR(16),
   login VARCHAR(6) NOT NULL,
   senha VARCHAR(255) NOT NULL,
 
@@ -29,7 +29,7 @@ CREATE TABLE vehicles (
   img VARCHAR(30) NOT NULL,
   modelo VARCHAR(30) NOT NULL,
   marca VARCHAR(30) NOT NULL,
-  categoria ENUM('SUV', 'Sedan', 'Hatchback', 'Pick-up', 'Esportivo', 'Luxo', 'Compacto'),
+  categoria ENUM('SUV', 'Sedan', 'Hatchback', 'Pick-up', 'Esportivo', 'Luxo', 'Compacto') NOT NULL,
   ano VARCHAR(4) NOT NULL,
   status ENUM('disponivel', 'ocupado') NOT NULL,
   preco FLOAT NOT NULL
