@@ -18,9 +18,9 @@ class LogController
         $this->LogRepository = new LogRepository($database);
     }
     
-    public function logUser(Request $request, Response $response) 
+    public function getAllLogs(Request $request, Response $response) 
     {
-        $data = $this->LogRepository->getLog();
+        $data = $this->LogRepository->getAllLogs();
 
         $body = json_encode($data);  
         
