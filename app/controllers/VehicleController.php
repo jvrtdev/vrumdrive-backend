@@ -22,6 +22,8 @@ class VehicleController
     {
         $data = $this->vehicleRepository->getVehicles();
 
+        $data['details'] = $this->vehicleRepository->getDetailsVehicleById($data['id_vehicle']);
+
         $body = json_encode($data);  
         
         $response->getBody()->write($body);
