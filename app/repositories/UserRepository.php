@@ -29,6 +29,60 @@ class UserRepository
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+    
+    public function getUsers(): array
+    {
+        $sql = 'SELECT * FROM users';
+        
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserById($id): array
+    {
+        $sql = 'SELECT * FROM users WHERE id_user = :id';
+        
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':id', $id);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserLogin($login): array
+    {
+        $sql = 'SELECT * FROM users WHERE login = :login';
+
+        // Prepara a consulta SQL
+        $stmt = $this->pdo->prepare($sql);
+        
+        // Substitui o marcador de posição :login pelo valor fornecido
+        $stmt->bindValue(':login', $login);
+
+        // Executa a consulta
+        $stmt->execute();
+
+        // Retorna os resultados como um array associativo
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
+
+    public function getAuth($cpf)
+    {
+        $sql = 'SELECT cpf FROM users WHERE cpf = :cpf';
+
+        $stmt = $this->pdo->prepare($sql);
+        
+        $stmt->bindValue(':cpf', $cpf);
+        
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 
     public function createAddress(array $data_columns): int
     {
@@ -59,7 +113,7 @@ class UserRepository
         return $id_address[0];
     }
 
-    public function createUser(array $data_columns)
+    public function createUser(array $data_columns): bool
     {
         $data_columns["id_address"] = $this->createAddress($data_columns);
 
@@ -83,23 +137,26 @@ class UserRepository
         {
             $stmt->bindValue($placeholders_user[$i], $data_columns[$columns_user[$i]]);
         }
-        $stmt->execute();
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->execute();
     }
 
-    public function updateUser(array $data_columns, $args)
+    public function updateUser(array $data_columns, $args): bool
     {
         $columns_user = $this->getColumnsUser();
         
-        foreach($columns_user as $key => $values){ 
+        foreach($columns_user as $key => $values)
+        { 
             $exist = false;
-            foreach($data_columns as $key2 => $values2){
-                if($values == $key2){
+            foreach($data_columns as $key2 => $values2)
+            {
+                if($values == $key2)
+                {
                     $exist = true;
                 }
             }
-            if(!$exist){
+            if(!$exist)
+            {
                 unset($columns_user[$key]);
             }
         }
@@ -128,36 +185,6 @@ class UserRepository
         return $stmt->execute();
     }
 
-    public function getUserLogin($login)
-    {
-        $sql = 'SELECT * FROM users WHERE login = :login';
-
-        // Prepara a consulta SQL
-        $stmt = $this->pdo->prepare($sql);
-        
-        // Substitui o marcador de posição :login pelo valor fornecido
-        $stmt->bindValue(':login', $login);
-
-        // Executa a consulta
-        $stmt->execute();
-
-        // Retorna os resultados como um array associativo
-        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
-    }
-
-    public function getAuth($cpf)
-    {
-        $sql = 'SELECT cpf FROM users WHERE cpf = :cpf';
-
-        $stmt = $this->pdo->prepare($sql);
-        
-        $stmt->bindValue(':cpf', $cpf);
-        
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
-
     public function deleteUserById($id)
     {
         $sql = 'DELETE FROM users WHERE id_user = :id';
@@ -165,33 +192,7 @@ class UserRepository
         $stmt = $this->pdo->prepare($sql);
         
         $stmt->bindValue(':id', $id);
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getUserById($id)
-    {
-        $sql = 'SELECT * FROM users WHERE id = :id';
         
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->bindValue(':id', $id);
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getUsers()
-    {
-        $sql = 'SELECT * FROM users';
-        
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->execute();
     }
 }
