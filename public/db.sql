@@ -10,17 +10,17 @@ CREATE TABLE users (
   telefone VARCHAR(16),
   tipo ENUM('Comum', 'Admin') DEFAULT'Comum',
   login VARCHAR(6) NOT NULL UNIQUE,
-  senha VARCHAR(255) NOT NULL
+  senha VARCHAR(8) NOT NULL
 );
 
 CREATE TABLE address (
   id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_user INT NOT NULL,
-  cep VARCHAR(9) NOT NULL,
-  estado VARCHAR(2) NOT NULL,
-  cidade VARCHAR(30) NOT NULL,
-  logradouro VARCHAR(40) NOT NULL,
-  numero INT NOT NULL,
+  cep VARCHAR(9),
+  estado VARCHAR(2),
+  cidade VARCHAR(30),
+  logradouro VARCHAR(40),
+  numero INT,
 
   FOREIGN KEY(id_user) REFERENCES users(id_user)
 );
