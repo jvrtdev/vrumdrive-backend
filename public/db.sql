@@ -1,9 +1,9 @@
 CREATE TABLE users (
   id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) NOT NULL,
-  data_nasc DATE,
+  data_nasc DATE NOT NULL,
   genero ENUM('F','M','O'),
-  nome_mat VARCHAR(50),
+  nome_mat VARCHAR(50) NOT NULL,
   cpf VARCHAR(15) UNIQUE,
   email VARCHAR(80) NOT NULL UNIQUE,
   celular VARCHAR(17) NOT NULL,
