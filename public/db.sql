@@ -15,7 +15,7 @@ CREATE TABLE users (
 
 CREATE TABLE address (
   id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  id_user INT NOT NULL,
+  id_user INT NOT NULL UNIQUE,
   cep VARCHAR(9),
   estado VARCHAR(2),
   cidade VARCHAR(30),
