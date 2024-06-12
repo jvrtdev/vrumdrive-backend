@@ -40,7 +40,9 @@ class VehicleRepository
     
     public function getDetailsVehicleById($id)
     {
-        $stmt = $this->pdo->query('SELECT * FROM vehicles_details WHERE id_details = :id');
+        $sql = 'SELECT * FROM vehicles_details WHERE id_details = :id';
+        
+        $stmt = $this->pdo->prepare($sql);
 
         $stmt->bindValue(':id', $id);
         
