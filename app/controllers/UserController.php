@@ -56,7 +56,7 @@ class UserController
   {
       $data = get_object_vars(json_decode($request->getBody()));
       
-      $fields = ['cpf', 'celular', 'telefone'];
+      $fields = ['celular'];
       $errors = [];
 
       foreach ($fields as $field)
@@ -112,13 +112,33 @@ class UserController
     catch(PDOException $e)
     {
       $response->getBody()->write(json_encode($e->getMessage()));
-    return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+      return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
     }
   }
 
   public function updateUser(Request $request, Response $response, $args)
   {
     $data = get_object_vars(json_decode($request->getBody()));
+
+    $fields = ['cpf', 'celular', 'telefone'];
+    $errors = [];
+
+    foreach ($fields as $field)
+    {
+        $validator = $field . 'Validator';
+        $error = $this->validate->$validator($data[$field]);
+
+        if ($error)
+        {
+          $errors[$field] = $error;
+        }
+    }
+
+    if (!empty($errors))
+    {
+      $response->getBody()->write(json_encode(['message' => $errors]));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
     
     try{
       $this->userRepository->updateUser($data, $args);

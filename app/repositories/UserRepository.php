@@ -115,14 +115,27 @@ class UserRepository
 
     public function createUser(array $data_columns): bool
     {
-        $data_columns["id_address"] = $this->createAddress($data_columns);
-
         $passwordHash = password_hash($data_columns["senha"], PASSWORD_DEFAULT);
         $data_columns["senha"] = $passwordHash;
 
         $columns_user = $this->getColumnsUser();
 
-        array_shift($columns_user);
+        foreach($columns_user as $key => $values)
+        { 
+            $exist = false;
+            foreach($data_columns as $key2 => $values2)
+            {
+                if($values == $key2)
+                {
+                    $exist = true;
+                }
+            }
+            if(!$exist)
+            {
+                unset($columns_user[$key]);
+            }
+        }
+        sort($columns_user);
 
         $placeholders_user = array_map(function($column) 
         {
