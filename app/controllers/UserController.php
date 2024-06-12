@@ -52,6 +52,22 @@ class UserController
     }  
   }
 
+  public function createAddress(Request $request, Response $response, $args)
+  {
+      $data = get_object_vars(json_decode($request->getBody()));
+
+      try{
+        $this->userRepository->createAddress($data, $args);
+        $response->getBody()->write(json_encode(['message' => 'User created successfully']));
+        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+      }
+      catch(PDOException $e)
+      {
+        $response->getBody()->write(json_encode($e->getMessage()));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+      }
+  }
+
   public function createUser(Request $request, Response $response)
   {
       $data = get_object_vars(json_decode($request->getBody()));
@@ -113,6 +129,23 @@ class UserController
     {
       $response->getBody()->write(json_encode($e->getMessage()));
       return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+    }
+  }
+
+  public function updateAddress(Request $request, Response $response, $args)
+  {
+    $data = get_object_vars(json_decode($request->getBody()));
+    
+    try{
+      $this->userRepository->updateAddress($data, $args);
+
+      $response->getBody()->write(json_encode(['message' => "sucesso"]));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
   }
 

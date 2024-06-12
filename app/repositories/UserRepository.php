@@ -84,8 +84,10 @@ class UserRepository
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function createAddress(array $data_columns): int
+    public function createAddress(array $data_columns, $args): int
     {
+        $data_columns["id_user"] = $args["id"];
+
         $columns_address = $this->getColumnsAddress();
 
         array_shift($columns_address);
@@ -149,6 +151,50 @@ class UserRepository
         for($i = 0; $i < count($columns_user); $i++)
         {
             $stmt->bindValue($placeholders_user[$i], $data_columns[$columns_user[$i]]);
+        }
+        
+        return $stmt->execute();
+    }
+
+    public function updateAddress(array $data_columns, $args): bool
+    {
+        $columns_address = $this->getColumnsaddress();
+        
+        foreach($columns_address as $key => $values)
+        { 
+            $exist = false;
+            foreach($data_columns as $key2 => $values2)
+            {
+                if($values == $key2)
+                {
+                    $exist = true;
+                }
+            }
+            if(!$exist)
+            {
+                unset($columns_address[$key]);
+            }
+        }
+        sort($columns_address);
+        
+        $placeholders_address = array_map(function($column) 
+        {
+            return ":$column";
+        }, $columns_address);
+         
+        $update = "";
+        for($i = 0; $i < count($columns_address); $i++)
+        {
+            $update = $update . ", " . $columns_address[$i] . " = " . $placeholders_address[$i];
+        }
+        $update = substr($update, 2);
+
+        $sql = 'UPDATE address SET ' . $update . ' WHERE id_address = ' . $args["id"];
+        $stmt = $this->pdo->prepare($sql);
+
+        for($i = 0; $i < count($columns_address); $i++)
+        {
+            $stmt->bindValue($placeholders_address[$i], $data_columns[$columns_address[$i]]);
         }
         
         return $stmt->execute();
