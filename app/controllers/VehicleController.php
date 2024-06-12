@@ -32,11 +32,12 @@ class VehicleController
 
     public function getVehicleById(Request $request, Response $response, $args)
     {   
-      try{
-        $data = $this->vehicleRepository->getVehicleById($args['id']);
+        try{
+            $data = $this->vehicleRepository->getVehicleById($args['id']);
+            $data["details"] = $this->vehicleRepository->getDetailsVehicleById($args['id']);
 
-        $response->getBody()->write->json_encode($data);
-        return $response->withHeader('Content-Type', 'application/json');
+            $response->getBody()->write(json_encode($data));
+            return $response->withHeader('Content-Type', 'application/json');
         }
         catch(PDOException $e)
         {
