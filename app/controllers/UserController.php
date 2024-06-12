@@ -38,6 +38,20 @@ class UserController
       return $response->withHeader('Content-Type', 'application/json');
   }
 
+  public function getUserById(Request $request, Response $response, $args)
+  {
+    try{
+      $user = $this->userRepository->getUserById($args['id']);
+      $response->getBody()->write(json_encode($user));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }  
+  }
+
   public function createUser(Request $request, Response $response)
   {
       $data = get_object_vars(json_decode($request->getBody()));
@@ -45,21 +59,24 @@ class UserController
       $fields = ['cpf', 'celular', 'telefone'];
       $errors = [];
 
-      foreach ($fields as $field) {
+      foreach ($fields as $field)
+      {
           $validator = $field . 'Validator';
           $error = $this->validate->$validator($data[$field]);
-          if ($error) {
-              $errors[$field] = $error;
+
+          if ($error)
+          {
+            $errors[$field] = $error;
           }
       }
 
-      if (!empty($errors)) {
-          $response->getBody()->write(json_encode(['message' => $errors]));
-          return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+      if (!empty($errors))
+      {
+        $response->getBody()->write(json_encode(['message' => $errors]));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
       }
 
-      try
-      {
+      try{
         $this->userRepository->createUser($data);
         $response->getBody()->write(json_encode(['message' => 'User created successfully']));
         return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
@@ -74,6 +91,7 @@ class UserController
   public function loginUser(Request $request, Response $response) 
   {
     $data = json_decode($request->getBody());
+
     try{
       $user = $this->userRepository->getUserLogin($data->login);
 
@@ -96,26 +114,6 @@ class UserController
       $response->getBody()->write(json_encode($e->getMessage()));
     return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
     }
-      
-    
-  }
-  
- 
-
-  public function deleteUser(Request $request, Response $response, $args)
-  {
-    $data = $args['id'];
-    
-    try{
-      $deletedUser = $this->userRepository->deleteUserById($data);
-      $response->getBody()->write(json_encode($deletedUser));
-      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-    }
-    catch(PDOException $e)
-    {
-      $response->getBody()->write(json_encode($e->getMessage()));
-      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-    }
   }
 
   public function updateUser(Request $request, Response $response, $args)
@@ -133,21 +131,21 @@ class UserController
       $response->getBody()->write(json_encode($e->getMessage()));
       return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
-      
   }
 
-  public function getUserById(Request $request, Response $response, $args)
+  public function deleteUser(Request $request, Response $response, $args)
   {
+    $data = $args['id'];
+    
     try{
-      $user = $this->userRepository->getUserById($args['id']);
-      $response->getBody()->write(json_encode($user));
+      $deletedUser = $this->userRepository->deleteUserById($data);
+      $response->getBody()->write(json_encode($deletedUser));
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
     catch(PDOException $e)
     {
       $response->getBody()->write(json_encode($e->getMessage()));
       return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-    }  
-    
+    }
   }
 }
