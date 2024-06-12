@@ -18,6 +18,7 @@ CREATE TABLE users (
   email VARCHAR(80) NOT NULL UNIQUE,
   celular VARCHAR(17) NOT NULL,
   telefone VARCHAR(16),
+  tipo ENUM('Comum', 'Admin') DEFAULT'Comum',
   login VARCHAR(6) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
 
