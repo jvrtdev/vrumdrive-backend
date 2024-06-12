@@ -14,11 +14,11 @@ CREATE TABLE users (
   data_nasc DATE NOT NULL,
   genero ENUM('F','M','O') NOT NULL,
   nome_mat VARCHAR(50) NOT NULL,
-  cpf VARCHAR(15) NOT NULL,
-  email VARCHAR(80) NOT NULL,
+  cpf VARCHAR(15) NOT NULL UNIQUE,
+  email VARCHAR(80) NOT NULL UNIQUE,
   celular VARCHAR(17) NOT NULL,
   telefone VARCHAR(16),
-  login VARCHAR(6) NOT NULL,
+  login VARCHAR(6) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
 
   FOREIGN KEY(id_address) REFERENCES address(id_address)
