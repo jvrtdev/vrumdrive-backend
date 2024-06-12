@@ -25,10 +25,11 @@ class VehicleController
 
             $vehicleDetail = [];
 
-            foreach($data as $vehicle){
+            foreach($data as $vehicle)
+            {
                 $detail = $this->vehicleRepository->getDetailsVehicleById($vehicle['id_vehicle']);
                 
-                $vehicle['detail'] = $detail;
+                $vehicle['detail'] = $detail[0];
                 
 
                 $vehicleDetail[] = $vehicle;   
@@ -38,15 +39,12 @@ class VehicleController
             
             $response->getBody()->write($body);
             return $response->withHeader('Content-Type', 'application/json');
-            
         }
-        
         catch(PDOException $e)
         {
             $response->getBody()->write(json_encode($e->getMessage()));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
-        
     }
 
     public function getVehicleById(Request $request, Response $response, $args)
