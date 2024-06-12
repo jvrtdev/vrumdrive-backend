@@ -24,20 +24,6 @@ CREATE TABLE users (
   FOREIGN KEY(id_address) REFERENCES address(id_address)
 );
 
-CREATE TABLE vehicles (
-  id_vehicle INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  id_datails INT NOT NULL,
-  img VARCHAR(30) NOT NULL,
-  modelo VARCHAR(30) NOT NULL,
-  marca VARCHAR(30) NOT NULL,
-  categoria ENUM('SUV', 'Sedan', 'Hatchback', 'Pick-up', 'Esportivo', 'Luxo', 'Compacto') NOT NULL,
-  ano VARCHAR(4) NOT NULL,
-  status ENUM('disponivel', 'ocupado') NOT NULL,
-  preco FLOAT NOT NULL,
-  
-  FOREIGN KEY(id_datails) REFERENCES vehicles_details(id_datails)
-);
-
 CREATE TABLE vehicles_details (
   id_details INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   quilometragem VARCHAR(250) NOT NULL,
@@ -47,6 +33,20 @@ CREATE TABLE vehicles_details (
   portas INT NOT NULL,
   mala INT NOT NULL,
   ar_condicionado BOOLEAN NOT NULL
+);
+
+CREATE TABLE vehicles (
+  id_vehicle INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_details INT NOT NULL,
+  img VARCHAR(30) NOT NULL,
+  modelo VARCHAR(30) NOT NULL,
+  marca VARCHAR(30) NOT NULL,
+  categoria ENUM('SUV', 'Sedan', 'Hatchback', 'Pick-up', 'Esportivo', 'Luxo', 'Compacto') NOT NULL,
+  ano VARCHAR(4) NOT NULL,
+  status ENUM('disponivel', 'ocupado') NOT NULL,
+  preco FLOAT NOT NULL,
+  
+  FOREIGN KEY(id_details) REFERENCES vehicles_details(id_details)
 );
 
 CREATE TABLE bookings (
