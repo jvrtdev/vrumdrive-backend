@@ -40,7 +40,11 @@ class VehicleRepository
     
     public function getVehicleById($id): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM vehicles WHERE id_vehicle = '.$id);
+        $stmt = $this->pdo->prepare('SELECT * FROM vehicles WHERE id_vehicle = :id');
+
+        $stmt->bindValue(':id', $id);
+
+        $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
@@ -74,7 +78,7 @@ class VehicleRepository
         return $id_details[0];
     }
 
-    public function createVehicle(array $data_columns)
+    public function createVehicle(array $data_columns): bool
     {
         $data_columns["id_details"] = $this->createDetals($data_columns);
 
@@ -95,21 +99,8 @@ class VehicleRepository
         {
             $stmt->bindValue($placeholders_vehicles[$i], $data_columns[$columns_vehicles[$i]]);
         }
-        $stmt->execute();
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
-    }
-
-    public function deleteVehicleById($id): bool
-    {
-        $sql = 'DELETE FROM vehicles WHERE id = ' . $id;
-
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+        return $stmt->execute();
     }
 
     public function updateVehicles($data, $id)
@@ -117,7 +108,8 @@ class VehicleRepository
         $fields = [];
         $values = [];
     
-        foreach ($data as $key => $value){
+        foreach ($data as $key => $value)
+        {
             $fields[] = "$key = :$key ";
             $values[":$key"] = $value; // Adicione ':' ao nome do parâmetro
         }
@@ -138,9 +130,22 @@ class VehicleRepository
             } else {
                 return false; // Nenhuma linha afetada
             }
-        } catch (PDOException $e) {
+        } 
+        catch (PDOException $e) 
+        {
             // Log do erro ou outra manipulação de erro
             return false;
         }
+    }
+
+    public function deleteVehicleById($id): bool
+    {
+        $sql = 'DELETE FROM vehicles WHERE id_vehicle = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':id', $id);
+
+        return $stmt->execute();
     }
 }
