@@ -1,28 +1,28 @@
 CREATE TABLE address (
   id_address INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_user INT NOT NULL,
   cep VARCHAR(9) NOT NULL,
   estado VARCHAR(2) NOT NULL,
   cidade VARCHAR(30) NOT NULL,
   logradouro VARCHAR(40) NOT NULL,
-  numero INT NOT NULL
+  numero INT NOT NULL,
+
+  FOREIGN KEY(id_user) REFERENCES users(id_user)
 );
 
 CREATE TABLE users (
   id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  id_address INT NOT NULL,
   nome VARCHAR(50) NOT NULL,
-  data_nasc DATE NOT NULL,
-  genero ENUM('F','M','O') NOT NULL,
-  nome_mat VARCHAR(50) NOT NULL,
-  cpf VARCHAR(15) NOT NULL UNIQUE,
+  data_nasc DATE,
+  genero ENUM('F','M','O'),
+  nome_mat VARCHAR(50),
+  cpf VARCHAR(15) UNIQUE,
   email VARCHAR(80) NOT NULL UNIQUE,
   celular VARCHAR(17) NOT NULL,
   telefone VARCHAR(16),
   tipo ENUM('Comum', 'Admin') DEFAULT'Comum',
   login VARCHAR(6) NOT NULL UNIQUE,
-  senha VARCHAR(255) NOT NULL,
-
-  FOREIGN KEY(id_address) REFERENCES address(id_address)
+  senha VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE vehicles_details (
@@ -61,4 +61,11 @@ CREATE TABLE bookings (
 
   FOREIGN KEY(id_user) REFERENCES users(id_user),
   FOREIGN KEY(id_vehicle) REFERENCES vehicles(id_vehicle)
+);
+
+CREATE TABLE logs (
+  log_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_user INT NOT NULL,
+  fator_autenticacao ENUM('CEP','Nome Materno', 'Data de Nascimento') NOT NULL,
+  data_hora_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
