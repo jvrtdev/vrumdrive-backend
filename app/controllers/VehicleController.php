@@ -17,12 +17,6 @@ class VehicleController
 
         $this->vehicleRepository = new VehicleRepository($database);
     }
-
-    public function hello(Request $request, Response $response)
-    {   
-        $response->getBody()->write("Hello world!");
-        return $response;
-    }
     
     public function getAllVehicles(Request $request, Response $response) 
     {
@@ -38,6 +32,7 @@ class VehicleController
     {   
       try{
         $data = $this->vehicleRepository->getVehicleById($args['id']);
+
         $response->getBody()->write->json_encode($data);
         return $response->withHeader('Content-Type', 'application/json');
         }
@@ -46,13 +41,12 @@ class VehicleController
             $response->getBody()->write(json_encode($e->getMessage()));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
-                
-        
     }
 
     public function createVehicle(Request $request, Response $response)
     {
         $data = get_object_vars(json_decode($request->getBody()));
+
         try{
             $result = $this->vehicleRepository->createVehicle($data);
             $response->getBody()->write(json_encode(['message' => 'Vehicle create successfully',$result]));
@@ -63,20 +57,6 @@ class VehicleController
             $response->getBody()->write(json_encode($e->getMessage()));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
-        
-    }
-
-    public function deleteVehicleById(Request $request, Response $response, $args)
-    {
-        try{
-            $vehicle = $this->vehicleRepository->deleteVehicleById($args['id']);
-            $response->getBody()->write(json_encode(['message' => 'Vehicle create successfully',$vehicle]));
-            return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
-        }
-        catch(PDOException $e){
-        $response->getBody()->write(json_encode($e->getMessage()));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-        }
     }
 
     public function updateVehicles(Request $request, Response $response, $args)
@@ -85,13 +65,28 @@ class VehicleController
 
         try{
             $vehicle = $this->vehicleRepository->updateVehicles($data, $args);
+
             $response->getBody()->write(json_encode(['message' => $vehicle]));
             return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
-        }catch(PDOException $e){
+        }
+        catch(PDOException $e)
+        {
             $response->getBody()->write(json_encode(['message' => $e]));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-            
+        }
+    }
 
+    public function deleteVehicleById(Request $request, Response $response, $args)
+    {
+        try{
+            $vehicle = $this->vehicleRepository->deleteVehicleById($args['id']);
+
+            $response->getBody()->write(json_encode(['message' => 'Vehicle create successfully',$vehicle]));
+            return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+        }
+        catch(PDOException $e){
+        $response->getBody()->write(json_encode($e->getMessage()));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
     }
 }
