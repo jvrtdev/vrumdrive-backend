@@ -17,9 +17,16 @@ class VehicleRepository
         $this->pdo = $database->getConnection();
     }
 
-    public function getColumns(): array
+    public function getColumnsVehicles(): array
     {
         $stmt = $this->pdo->query('SHOW COLUMNS FROM vehicles');
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function getColumnsDetails(): array
+    {
+        $stmt = $this->pdo->query('SHOW COLUMNS FROM vehicles_details');
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -38,29 +45,61 @@ class VehicleRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
-    public function createVehicle(array $data_columns): bool
+    public function createDetals(array $data_columns): int
     {
-        $columns = $this->getColumns();
+        $columns_details = $this->getColumnsDetails();
 
-        array_shift($columns);
+        array_shift($columns_details);
 
-        $placeholders = array_map(function($column) 
+        $placeholders_details = array_map(function($column) 
         {
             return ":$column";
-        }, $columns);
+        }, $columns_details);
 
-        $sql = 'INSERT INTO vehicles (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')';
+        $sql = 'INSERT INTO vehicles_details (' . implode(', ', $columns_details) . ') VALUES (' . implode(', ', $placeholders_details) . ')';
 
         $stmt = $this->pdo->prepare($sql);
 
-        for($i = 0; $i < count($columns); $i++)
+        for($i = 0; $i < count($columns_details); $i++)
         {
-            $stmt->bindValue($placeholders[$i], $data_columns[$columns[$i]]);
+            $stmt->bindValue($placeholders_details[$i], $data_columns[$columns_details[$i]]);
+        }
+        
+        $stmt->execute();
+
+        $stmt = $this->pdo->query('SELECT LAST_INSERT_ID()');
+
+        $id_details = $stmt->fetch();
+
+        return $id_details[0];
+    }
+
+    public function createVehicle(array $data_columns)
+    {
+        $data_columns["id_details"] = $this->createDetals($data_columns);
+
+        $columns_vehicles = $this->getColumnsVehicles();
+
+        array_shift($columns_vehicles);
+
+        $placeholders_vehicles = array_map(function($column) 
+        {
+            return ":$column";
+        }, $columns_vehicles);
+
+        $sql = 'INSERT INTO vehicles (' . implode(', ', $columns_vehicles) . ') VALUES (' . implode(', ', $placeholders_vehicles) . ')';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        for($i = 0; $i < count($columns_vehicles); $i++)
+        {
+            $stmt->bindValue($placeholders_vehicles[$i], $data_columns[$columns_vehicles[$i]]);
         }
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
+
     public function deleteVehicleById($id): bool
     {
         $sql = 'DELETE FROM vehicles WHERE id = ' . $id;
