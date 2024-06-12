@@ -38,21 +38,24 @@ class VehicleRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function getDetailsVehicleById($id)
+    public function getDetailsVehicleById($id): array
     {
         $sql = 'SELECT * FROM vehicles_details WHERE id_details = :id';
         
         $stmt = $this->pdo->prepare($sql);
 
         $stmt->bindValue(':id', $id);
+
+        $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
-
     
     public function getVehicleById($id): array
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM vehicles WHERE id_vehicle = :id');
+        $sql = 'SELECT * FROM vehicles WHERE id_vehicle = :id';
+
+        $stmt = $this->pdo->prepare($sql);
 
         $stmt->bindValue(':id', $id);
 
