@@ -20,14 +20,31 @@ class VehicleController
     
     public function getAllVehicles(Request $request, Response $response) 
     {
-        $data = $this->vehicleRepository->getVehicles();
+        try{
+            $data = $this->vehicleRepository->getVehicles();
 
-        $data['details'] = $this->vehicleRepository->getDetailsVehicleById($data['id_vehicle']);
+            $vehicleDetail = [];
 
-        $body = json_encode($data);  
-        
-        $response->getBody()->write($body);
-        return $response->withHeader('Content-Type', 'application/json');
+            foreach($data as $vehicle)
+            {
+                $detail = $this->vehicleRepository->getDetailsVehicleById($vehicle['id_vehicle']);
+                
+                $vehicle['detail'] = $detail[0];
+                
+
+                $vehicleDetail[] = $vehicle;   
+            }
+
+            $body = json_encode($vehicleDetail); 
+            
+            $response->getBody()->write($body);
+            return $response->withHeader('Content-Type', 'application/json');
+        }
+        catch(PDOException $e)
+        {
+            $response->getBody()->write(json_encode($e->getMessage()));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
     }
 
     public function getVehicleById(Request $request, Response $response, $args)
