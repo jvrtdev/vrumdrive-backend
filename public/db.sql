@@ -26,27 +26,27 @@ CREATE TABLE users (
 
 CREATE TABLE vehicles (
   id_vehicle INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_datails INT NOT NULL,
   img VARCHAR(30) NOT NULL,
   modelo VARCHAR(30) NOT NULL,
   marca VARCHAR(30) NOT NULL,
   categoria ENUM('SUV', 'Sedan', 'Hatchback', 'Pick-up', 'Esportivo', 'Luxo', 'Compacto') NOT NULL,
   ano VARCHAR(4) NOT NULL,
   status ENUM('disponivel', 'ocupado') NOT NULL,
-  preco FLOAT NOT NULL
+  preco FLOAT NOT NULL,
+  
+  FOREIGN KEY(id_datails) REFERENCES vehicles_details(id_datails)
 );
 
 CREATE TABLE vehicles_details (
   id_details INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  id_vehicle INT NOT NULL,
   quilometragem VARCHAR(250) NOT NULL,
   motor VARCHAR(30) NOT NULL,
   cor VARCHAR(30) NOT NULL,
   detalhes TEXT NOT NULL,
   portas INT NOT NULL,
   mala INT NOT NULL,
-  ar_condicionado BOOLEAN NOT NULL,
-  
-  FOREIGN KEY(id_vehicle) REFERENCES vehicles(id_vehicle)
+  ar_condicionado BOOLEAN NOT NULL
 );
 
 CREATE TABLE bookings (
