@@ -63,6 +63,5 @@ class Validate
                 return "Formato incorreto";
             }
         }
-        
     }
 }
