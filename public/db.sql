@@ -30,7 +30,9 @@ CREATE TABLE logs (
   log_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_user INT NOT NULL,
   fator_autenticacao ENUM('CEP','Nome Materno', 'Data de Nascimento') NOT NULL,
-  data_hora_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  data_hora_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY(id_user) REFERENCES users(id_user)
 );
 
 CREATE TABLE vehicles_details (
@@ -47,7 +49,7 @@ CREATE TABLE vehicles_details (
 CREATE TABLE vehicles (
   id_vehicle INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_details INT NOT NULL,
-  img VARCHAR(30) NOT NULL,
+  img LONGBLOB NOT NULL,
   modelo VARCHAR(30) NOT NULL,
   marca VARCHAR(30) NOT NULL,
   categoria ENUM('SUV', 'Sedan', 'Hatchback', 'Pick-up', 'Esportivo', 'Luxo', 'Compacto') NOT NULL,
