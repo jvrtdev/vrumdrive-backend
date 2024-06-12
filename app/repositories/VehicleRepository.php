@@ -31,9 +31,9 @@ class VehicleRepository
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public function getVehicles(): array
+    public function getAllVehicles(): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM vehicles');
+        $stmt = $this->pdo->query('SELECT * FROM vehicles LEFT JOIN vehicles_details ON (vehicles.id_details = vehicles_details.id_details)');
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

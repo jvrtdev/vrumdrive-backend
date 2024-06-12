@@ -21,21 +21,9 @@ class VehicleController
     public function getAllVehicles(Request $request, Response $response) 
     {
         try{
-            $data = $this->vehicleRepository->getVehicles();
+            $data = $this->vehicleRepository->getAllVehicles();
 
-            $vehicleDetail = [];
-
-            foreach($data as $vehicle)
-            {
-                $detail = $this->vehicleRepository->getDetailsVehicleById($vehicle['id_vehicle']);
-                
-                $vehicle['detail'] = $detail[0];
-                
-
-                $vehicleDetail[] = $vehicle;   
-            }
-
-            $body = json_encode($vehicleDetail); 
+            $body = json_encode($data); 
             
             $response->getBody()->write($body);
             return $response->withHeader('Content-Type', 'application/json');
