@@ -5,50 +5,54 @@ class Validate
 {
     public function cpfValidator($cpf)
     {
-      $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        if(!empty($cpf)){
+            $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
-      if (strlen($cpf) != 11)
-      {
-          return "Número de caractéres inválido";
-      }
+            if (strlen($cpf) != 11)
+            {
+                return "Número de caractéres inválido";
+            }
 
-      if (preg_match('/(\d)\1{10}/', $cpf)) 
-      {
-          return "CPF inválido";
-      }
-      
-      for ($i = 10, $soma = 0, $k = 0; $i > 1; $i--) 
-      {
-          $soma += $cpf[$k++] * $i;
-      }
-      
-      $verificador1 = (($soma % 11) < 2) ? 0 : 11 - ($soma % 11);
-      
-      for ($i = 11, $soma = 0, $k = 0; $i > 1; $i--) 
-      {
-          $soma += $cpf[$k++] * $i;
-      }
-      
-      $verificador2 = (($soma % 11) < 2) ? 0 : 11 - ($soma % 11);
+            if (preg_match('/(\d)\1{10}/', $cpf)) 
+            {
+                return "CPF inválido";
+            }
+            
+            for ($i = 10, $soma = 0, $k = 0; $i > 1; $i--) 
+            {
+                $soma += $cpf[$k++] * $i;
+            }
+            
+            $verificador1 = (($soma % 11) < 2) ? 0 : 11 - ($soma % 11);
+            
+            for ($i = 11, $soma = 0, $k = 0; $i > 1; $i--) 
+            {
+                $soma += $cpf[$k++] * $i;
+            }
+            
+            $verificador2 = (($soma % 11) < 2) ? 0 : 11 - ($soma % 11);
 
-      if ($verificador1 != $cpf[9] || $verificador2 != $cpf[10]) 
-      {
-        return "CPF inexistente";
-      }
+            if ($verificador1 != $cpf[9] || $verificador2 != $cpf[10]) 
+            {
+                return "CPF inexistente";
+            }
 
-      return false;
+            return false;
+        }
     }
 
     public function celularValidator($cel)
     {
-        if(strlen($cel) != 17)
-        {
-            return "Número de caractéres inválido";
-        }
+        if(!empty($cel)){
+            if(strlen($cel) != 17)
+            {
+                return "Número de caractéres inválido";
+            }
 
-        if(substr($cel, 0, 9) != "(+55)21-9" || !preg_match('/^\d+$/', substr($cel, 10, 8)))
-        {
-            return "Formato incorreto";
+            if(substr($cel, 0, 9) != "(+55)21-9" || !preg_match('/^\d+$/', substr($cel, 10, 8)))
+            {
+                return "Formato incorreto";
+            }
         }
     }
 
