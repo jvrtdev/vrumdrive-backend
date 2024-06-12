@@ -59,7 +59,7 @@ class UserRepository
         return $id_address[0];
     }
 
-    public function createUser(array $data_columns): bool
+    public function createUser(array $data_columns)
     {
         $data_columns["id_address"] = $this->createAddress($data_columns);
 
@@ -160,7 +160,7 @@ class UserRepository
 
     public function deleteUserById($id)
     {
-        $sql = 'DELETE FROM users WHERE id = :id';
+        $sql = 'DELETE FROM users WHERE id_user = :id';
 
         $stmt = $this->pdo->prepare($sql);
         
