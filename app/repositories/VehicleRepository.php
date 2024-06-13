@@ -99,35 +99,86 @@ class VehicleRepository
         return $stmt->execute();
     }
 
-    //arrumar o Update e o Delete
-
-    public function updateVehicles($data, $id)
+    public function updateDetailsById($data, $id)
     {
+        $columns_details = $this->getColumnsDetails();
+
         $fields = [];
         $values = [];
-    
-        foreach ($data as $key => $value)
-        {
-            $fields[] = "$key = :$key ";
-            $values[":$key"] = $value; // Adicione ':' ao nome do parâmetro
+
+        foreach($columns_details as $value_details)
+        { 
+            foreach ($data as $key => $value)
+            {
+                if($value_details == $key){
+                    $fields[] = "$key = :$key ";
+                    $values[":$key"] = $value; // Adicione ':' ao nome do parâmetro
+                }
+            }
         }
     
         $fields = implode(", ", $fields);
         
-        $sql = "UPDATE vehicles SET $fields WHERE id = :id";
+        $sql = "UPDATE vehicles_details SET $fields WHERE id_details = :id";
     
         $stmt = $this->pdo->prepare($sql);
     
         $values[':id'] = $id; // Adicione o ID ao array de valores
-    
+
         try {
             $stmt->execute($values);
     
             if ($stmt->rowCount() > 0) {
                 return true; // Atualização bem-sucedida
-            } else {
-                return false; // Nenhuma linha afetada
             }
+
+            return false; // Nenhuma linha afetada  
+        } 
+        catch (PDOException $e) 
+        {
+            // Log do erro ou outra manipulação de erro
+            return false;
+        }
+    }
+
+    public function updateVehicleById($data, $id)
+    {
+        $columns_vehicles = $this->getColumnsVehicles();
+
+        $fields = [];
+        $values = [];
+
+        foreach($columns_vehicles as $value_vehicles)
+        { 
+            foreach ($data as $key => $value)
+            {
+                if($value_vehicles == $key){
+                    $fields[] = "$key = :$key ";
+                    $values[":$key"] = $value; // Adicione ':' ao nome do parâmetro
+                }
+            }
+        }
+    
+        $fields = implode(", ", $fields);
+        
+        $sql = "UPDATE vehicles SET $fields WHERE id_vehicle = :id";
+    
+        $stmt = $this->pdo->prepare($sql);
+    
+        $values[':id'] = $id; // Adicione o ID ao array de valores
+
+        try {
+            if($fields !== ""){
+                $stmt->execute($values);
+            }
+
+            $updateDetails = $this->updateDetailsById($data, $id);
+    
+            if ($stmt->rowCount() > 0 || $updateDetails) {
+                return true; // Atualização bem-sucedida
+            }
+            
+            return false; // Nenhuma linha afetada  
         } 
         catch (PDOException $e) 
         {
