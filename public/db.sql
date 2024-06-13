@@ -40,6 +40,7 @@ CREATE TABLE vehicles_details (
   quilometragem VARCHAR(250) NOT NULL,
   motor VARCHAR(30) NOT NULL,
   cor VARCHAR(30) NOT NULL,
+  titulo TEXT NOT NULL,
   detalhes TEXT NOT NULL,
   portas INT NOT NULL,
   mala INT NOT NULL,
