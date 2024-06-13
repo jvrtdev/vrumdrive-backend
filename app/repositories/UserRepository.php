@@ -30,26 +30,16 @@ class UserRepository
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
     
-    public function getUsers(): array
+    public function getAllUsers(): array
     {
-        $sql = 'SELECT * FROM users';
-        
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->execute();
+        $stmt = $this->pdo->query('SELECT * FROM users LEFT JOIN address ON (users.id_user = address.id_user)');
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getUserById($id): array
     {
-        $sql = 'SELECT * FROM users WHERE id_user = :id';
-        
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->bindValue(':id', $id);
-
-        $stmt->execute();
+        $stmt = $this->pdo->query('SELECT * FROM users LEFT JOIN address ON (users.id_user = address.id_user) WHERE id_address = ' . $id);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -84,9 +74,9 @@ class UserRepository
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function createAddress(array $data_columns, $args): int
+    public function createAddress(array $data_columns, $user_id): bool
     {
-        $data_columns["id_user"] = $args["id"];
+        $data_columns["id_user"] = $user_id;
 
         $columns_address = $this->getColumnsAddress();
 
@@ -106,13 +96,7 @@ class UserRepository
             $stmt->bindValue($placeholders_address[$i], $data_columns[$columns_address[$i]]);
         }
         
-        $stmt->execute();
-
-        $stmt = $this->pdo->query('SELECT LAST_INSERT_ID()');
-
-        $id_address = $stmt->fetch();
-
-        return $id_address[0];
+        return $stmt->execute();
     }
 
     public function createUser(array $data_columns): bool
@@ -153,10 +137,16 @@ class UserRepository
             $stmt->bindValue($placeholders_user[$i], $data_columns[$columns_user[$i]]);
         }
         
-        return $stmt->execute();
+        $stmt->execute();
+
+        $stmt = $this->pdo->query('SELECT LAST_INSERT_ID()');
+
+        $id_user = $stmt->fetch()[0];
+
+        return $this->createAddress($data_columns, $id_user);
     }
 
-    public function updateAddress(array $data_columns, $args): bool
+    public function updateAddress(array $data_columns, $id_user): bool
     {
         $columns_address = $this->getColumnsaddress();
         
@@ -176,6 +166,11 @@ class UserRepository
             }
         }
         sort($columns_address);
+
+        if(empty($columns_address))
+        {
+            return false;
+        }
         
         $placeholders_address = array_map(function($column) 
         {
@@ -189,7 +184,7 @@ class UserRepository
         }
         $update = substr($update, 2);
 
-        $sql = 'UPDATE address SET ' . $update . ' WHERE id_address = ' . $args["id"];
+        $sql = 'UPDATE address SET ' . $update . ' WHERE id_user = ' . $id_user;
         $stmt = $this->pdo->prepare($sql);
 
         for($i = 0; $i < count($columns_address); $i++)
@@ -202,6 +197,8 @@ class UserRepository
 
     public function updateUser(array $data_columns, $args): bool
     {
+        $this->updateAddress($data_columns, $args["id"]);
+
         $columns_user = $this->getColumnsUser();
         
         foreach($columns_user as $key => $values)
@@ -244,8 +241,21 @@ class UserRepository
         return $stmt->execute();
     }
 
+    public function deleteAddressById($id)
+    {
+        $sql = 'DELETE FROM address WHERE id_user = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+        
+        $stmt->bindValue(':id', $id);
+        
+        return $stmt->execute();
+    }
+
     public function deleteUserById($id)
     {
+        $this->deleteAddressById($id);
+
         $sql = 'DELETE FROM users WHERE id_user = :id';
 
         $stmt = $this->pdo->prepare($sql);
