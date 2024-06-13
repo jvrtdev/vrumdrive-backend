@@ -181,11 +181,10 @@ class UserController
 
   public function deleteUserById(Request $request, Response $response, $args)
   {
-    $data = $args['id'];
-    
     try{
-      $deletedUser = $this->userRepository->deleteUserById($data);
-      $response->getBody()->write(json_encode($deletedUser));
+      $this->userRepository->deleteUserById($args['id']);
+
+      $response->getBody()->write(json_encode(['message' => "sucesso"]));
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
     catch(PDOException $e)
