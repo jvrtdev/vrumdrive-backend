@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Database;
 use PDO;
+use PDOException;
 
 class UserRepository
 {   
@@ -146,99 +147,92 @@ class UserRepository
         return $this->createAddress($data_columns, $id_user);
     }
 
-    public function updateAddress(array $data_columns, $id_user): bool
+    public function updateAddressById(array $data, $id_user)
     {
-        $columns_address = $this->getColumnsaddress();
-        
-        foreach($columns_address as $key => $values)
+        $columns_address = $this->getColumnsAddress();
+
+        $fields = [];
+        $values = [];
+
+        foreach($columns_address as $value_address)
         { 
-            $exist = false;
-            foreach($data_columns as $key2 => $values2)
+            foreach ($data as $key => $value)
             {
-                if($values == $key2)
-                {
-                    $exist = true;
+                if($value_address == $key){
+                    $fields[] = "$key = :$key ";
+                    $values[":$key"] = $value; // Adicione ':' ao nome do parâmetro
                 }
             }
-            if(!$exist)
-            {
-                unset($columns_address[$key]);
-            }
         }
-        sort($columns_address);
+    
+        $fields = implode(", ", $fields);
+        
+        $sql = "UPDATE address SET $fields WHERE id_user = :id";
+    
+        $stmt = $this->pdo->prepare($sql);
+    
+        $values[':id'] = $id_user; // Adicione o ID ao array de valores
 
-        if(empty($columns_address))
+        try {
+            $stmt->execute($values);
+    
+            if ($stmt->rowCount() > 0) {
+                return true; // Atualização bem-sucedida
+            }
+
+            return false; // Nenhuma linha afetada  
+        } 
+        catch (PDOException $e) 
         {
+            // Log do erro ou outra manipulação de erro
             return false;
         }
-        
-        $placeholders_address = array_map(function($column) 
-        {
-            return ":$column";
-        }, $columns_address);
-         
-        $update = "";
-        for($i = 0; $i < count($columns_address); $i++)
-        {
-            $update = $update . ", " . $columns_address[$i] . " = " . $placeholders_address[$i];
-        }
-        $update = substr($update, 2);
-
-        $sql = 'UPDATE address SET ' . $update . ' WHERE id_user = ' . $id_user;
-        $stmt = $this->pdo->prepare($sql);
-
-        for($i = 0; $i < count($columns_address); $i++)
-        {
-            $stmt->bindValue($placeholders_address[$i], $data_columns[$columns_address[$i]]);
-        }
-        
-        return $stmt->execute();
     }
 
-    public function updateUser(array $data_columns, $args): bool
+    public function updateUserById(array $data, $id)
     {
-        $this->updateAddress($data_columns, $args["id"]);
-
         $columns_user = $this->getColumnsUser();
-        
-        foreach($columns_user as $key => $values)
+
+        $fields = [];
+        $values = [];
+
+        foreach($columns_user as $value_user)
         { 
-            $exist = false;
-            foreach($data_columns as $key2 => $values2)
+            foreach ($data as $key => $value)
             {
-                if($values == $key2)
-                {
-                    $exist = true;
+                if($value_user == $key){
+                    $fields[] = "$key = :$key ";
+                    $values[":$key"] = $value; // Adicione ':' ao nome do parâmetro
                 }
             }
-            if(!$exist)
-            {
-                unset($columns_user[$key]);
-            }
         }
-        sort($columns_user);
+    
+        $fields = implode(", ", $fields);
         
-        $placeholders_user = array_map(function($column) 
-        {
-            return ":$column";
-        }, $columns_user);
-         
-        $update = "";
-        for($i = 0; $i < count($columns_user); $i++)
-        {
-            $update = $update . ", " . $columns_user[$i] . " = " . $placeholders_user[$i];
-        }
-        $update = substr($update, 2);
-
-        $sql = 'UPDATE users SET ' . $update . ' WHERE id_user = ' . $args["id"];
+        $sql = "UPDATE users SET $fields WHERE id_user = :id";
+    
         $stmt = $this->pdo->prepare($sql);
+    
+        $values[':id'] = $id; // Adicione o ID ao array de valores
 
-        for($i = 0; $i < count($columns_user); $i++)
+        try {
+            if($fields !== ""){
+                $stmt->execute($values);
+            }
+
+            $updateAddress = $this->updateAddressById($data, $id);
+    
+            if ($stmt->rowCount() > 0 || $updateAddress) {
+                return true; // Atualização bem-sucedida
+            }
+            
+            return false; // Nenhuma linha afetada  
+        } 
+        catch (PDOException $e) 
         {
-            $stmt->bindValue($placeholders_user[$i], $data_columns[$columns_user[$i]]);
+            // Log do erro ou outra manipulação de erro
+            return $e;
         }
-        
-        return $stmt->execute();
     }
 
     public function deleteAddressById($id)
