@@ -39,10 +39,11 @@ class VehicleController
     {   
         try{
             $data = $this->vehicleRepository->getVehicleById($args['id']);
-            $data["details"] = $this->vehicleRepository->getDetailsVehicleById($args['id']);
+            
+            $body = json_encode($data); 
 
-            $response->getBody()->write(json_encode($data));
-            return $response->withHeader('Content-Type', 'application/json');
+            $response->getBody()->write($body);
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
         }
         catch(PDOException $e)
         {
