@@ -68,12 +68,12 @@ class VehicleController
         }
     }
 
-    public function updateVehicles(Request $request, Response $response, $args)
+    public function updateVehicleById(Request $request, Response $response, $args)
     {
         $data = json_decode($request->getBody());
 
         try{
-            $vehicle = $this->vehicleRepository->updateVehicles($data, $args);
+            $vehicle = $this->vehicleRepository->updateVehicleById($data, $args["id"]);
 
             $response->getBody()->write(json_encode(['message' => $vehicle]));
             return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
