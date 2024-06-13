@@ -1,6 +1,6 @@
 CREATE TABLE users (
   id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  profile_img VARCHAR(50),
+  profile_img VARCHAR(100),
   nome VARCHAR(50) NOT NULL,
   data_nasc DATE NOT NULL,
   genero ENUM('F','M','O'),
@@ -51,7 +51,7 @@ CREATE TABLE vehicles_details (
 CREATE TABLE vehicles (
   id_vehicle INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_details INT NOT NULL,
-  img LONGBLOB NOT NULL,
+  img VARCHAR(100) NOT NULL,
   modelo VARCHAR(30) NOT NULL,
   marca VARCHAR(30) NOT NULL,
   categoria ENUM('SUV', 'Sedan', 'Hatchback', 'Pick-up', 'Esportivo', 'Luxo', 'Compacto') NOT NULL,
