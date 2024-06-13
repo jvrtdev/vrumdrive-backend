@@ -14,7 +14,7 @@ return function ($app) {
     $app->group('/api', function (RouteCollectorProxy $group) {
         $group->get('/user/{id}', UserController::class . ':getUserById');
         $group->get('/users', UserController::class . ':getUsers');
-        $group->put('/user/update/{id}', UserController::class . ':updateUser');
-        $group->delete('/user/delete/{id}', UserController::class . ':deleteUser');
+        $group->put('/user/update/{id}', UserController::class . ':updateUserById');
+        $group->delete('/user/delete/{id}', UserController::class . ':deleteUserById');
     })->add(new AuthJwt());
 };
