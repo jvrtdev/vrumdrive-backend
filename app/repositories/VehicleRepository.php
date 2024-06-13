@@ -38,28 +38,9 @@ class VehicleRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function getDetailsVehicleById($id): array
-    {
-        $sql = 'SELECT * FROM vehicles_details WHERE id_details = :id';
-        
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->bindValue(':id', $id);
-
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
     public function getVehicleById($id): array
     {
-        $sql = 'SELECT * FROM vehicles WHERE id_vehicle = :id';
-
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->bindValue(':id', $id);
-
-        $stmt->execute();
+        $stmt = $this->pdo->query('SELECT * FROM vehicles LEFT JOIN vehicles_details ON (vehicles.id_details = vehicles_details.id_details) WHERE id_vehicle = ' . $id);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
@@ -117,6 +98,8 @@ class VehicleRepository
         
         return $stmt->execute();
     }
+
+    //arrumar o Update e o Delete
 
     public function updateVehicles($data, $id)
     {
