@@ -30,26 +30,36 @@ class UserController
 
   public function getUsers(Request $request, Response $response) 
   {
-      $data = $this->userRepository->getUsers();
+      try{
+        $data = $this->userRepository->getAllUsers();
 
-      $body = json_encode($data);  
-      
-      $response->getBody()->write($body);
-      return $response->withHeader('Content-Type', 'application/json');
+        $body = json_encode($data);  
+        
+        $response->getBody()->write($body);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+        $response->getBody()->write(json_encode($e->getMessage()));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
   }
 
   public function getUserById(Request $request, Response $response, $args)
   {
     try{
-      $user = $this->userRepository->getUserById($args['id']);
-      $response->getBody()->write(json_encode($user));
+      $data = $this->userRepository->getUserById($args['id']);
+      
+      $body = json_encode($data); 
+
+      $response->getBody()->write($body);
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
     catch(PDOException $e)
     {
-      $response->getBody()->write(json_encode($e->getMessage()));
-      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-    }  
+        $response->getBody()->write(json_encode($e->getMessage()));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
   }
 
   public function createAddress(Request $request, Response $response, $args)
