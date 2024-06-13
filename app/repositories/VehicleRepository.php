@@ -197,4 +197,17 @@ class VehicleRepository
 
         return $stmt->execute();
     }
+
+    public function deleteDetailsById($id)
+    {
+        $this->deleteVehicleById($id);
+        
+        $sql = 'DELETE FROM vehicles_details WHERE id_details = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+        
+        $stmt->bindValue(':id', $id);
+        
+        return $stmt->execute();
+    }
 }
