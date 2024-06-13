@@ -142,24 +142,7 @@ class UserController
     }
   }
 
-  public function updateAddress(Request $request, Response $response, $args)
-  {
-    $data = get_object_vars(json_decode($request->getBody()));
-    
-    try{
-      $this->userRepository->updateAddress($data, $args);
-
-      $response->getBody()->write(json_encode(['message' => "sucesso"]));
-      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-    }
-    catch(PDOException $e)
-    {
-      $response->getBody()->write(json_encode($e->getMessage()));
-      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-    }
-  }
-
-  public function updateUser(Request $request, Response $response, $args)
+  public function updateUserById(Request $request, Response $response, $args)
   {
     $data = get_object_vars(json_decode($request->getBody()));
 
@@ -184,7 +167,7 @@ class UserController
     }
     
     try{
-      $this->userRepository->updateUser($data, $args);
+      $this->userRepository->updateUserById($data, $args["id"]);
 
       $response->getBody()->write(json_encode(['message' => "sucesso"]));
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
@@ -196,7 +179,7 @@ class UserController
     }
   }
 
-  public function deleteUser(Request $request, Response $response, $args)
+  public function deleteUserById(Request $request, Response $response, $args)
   {
     $data = $args['id'];
     
