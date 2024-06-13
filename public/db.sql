@@ -1,5 +1,6 @@
 CREATE TABLE users (
   id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  profile_img VARCHAR(50),
   nome VARCHAR(50) NOT NULL,
   data_nasc DATE NOT NULL,
   genero ENUM('F','M','O'),

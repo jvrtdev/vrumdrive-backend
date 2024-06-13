@@ -17,7 +17,7 @@ class LogRepository
         $this->pdo = $database->getConnection();
     }
 
-    public function getLog(): array
+    public function getAllLogs(): array
     {
         $stmt = $this->pdo->query('SELECT * FROM logs');
 
