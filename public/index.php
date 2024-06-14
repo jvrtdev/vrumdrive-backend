@@ -30,5 +30,6 @@ $app->add(function ($request, $handler) {
 (require __DIR__ . "/../app/routes/users.php")($app);
 (require __DIR__ . "/../app/routes/vehicles.php")($app);
 (require __DIR__ . "/../app/routes/bookings.php")($app);
+(require __DIR__ . "/../app/routes/log.php")($app);
 
 $app->run();
