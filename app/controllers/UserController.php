@@ -116,12 +116,12 @@ class UserController
 
   public function loginUser(Request $request, Response $response) 
   {
-    $data = json_decode($request->getBody());
+    $data = get_object_vars(json_decode($request->getBody()));
 
     try{
-      $user = $this->userRepository->getUserLogin($data->login);
+      $user = $this->userRepository->getUserLogin($data["login"]);
 
-      $verify = password_verify($data->senha, $user["senha"]);
+      $verify = password_verify($data["senha"], $user["senha"]);
       
       if ($verify)
       {
@@ -134,6 +134,26 @@ class UserController
         $response->getBody()->write(json_encode(['token' => $token]));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
       }
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+    }
+  }
+
+  public function twoFactor(Request $request, Response $response, $args) 
+  {
+    $data = get_object_vars(json_decode($request->getBody()));
+
+    try{
+      $user = $this->userRepository->getUserById($args["id"]);
+
+      $fa = $this->userRepository->twoFactor($user, $data);
+      
+      $response->getBody()->write(json_encode(['message' => $fa]));
+      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+      
     }
     catch(PDOException $e)
     {
