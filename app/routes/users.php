@@ -8,6 +8,7 @@ return function ($app) {
     // Rotas sem JWT
     $app->post('/api/user/create', UserController::class . ':createUser');
     $app->post('/api/user/login', UserController::class . ':loginUser');
+    $app->post('/api/user/2FA/{id}', UserController::class . ':twoFactor');
     $app->post('/teste', UserController::class . ':testToken');
 
     // Rotas protegidas com JWT
