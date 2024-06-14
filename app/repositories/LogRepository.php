@@ -17,11 +17,72 @@ class LogRepository
         $this->pdo = $database->getConnection();
     }
 
+    public function getColumnsLog(): array
+    {
+        $stmt = $this->pdo->query('SHOW COLUMNS FROM logs');
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
     public function getAllLogs(): array
     {
         $stmt = $this->pdo->query('SELECT * FROM logs');
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
+    public function getLogsById($id): array
+    {
+        $stmt = $this->pdo->query('SELECT * FROM logs LEFT JOIN users ON (logs.id_user = users.id_user) WHERE log_id = ' . $id);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
+
+    public function getFilterLogs($value)
+    {   
+        $columns_log = $this->getColumnsLog();
+        unset($columns_log[1]);
+
+        $query = $this->pdo->query('SHOW COLUMNS FROM users');
+        $columns_user = $query->fetchAll(PDO::FETCH_COLUMN);
+        array_shift($columns_user);
+
+        $columns = array_merge($columns_log, $columns_user);
+
+        $fields = [];
+
+        foreach ($columns as $values)
+        {
+            $fields[] = "$values LIKE '%$value%'";
+        }
+        
+        $fields = implode(" or ", $fields);
+
+        $sql = 'SELECT * FROM logs LEFT JOIN users ON (logs.id_user = users.id_user) where ' . $fields;
+
+        $stmt = $this->pdo->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function createLog(array $data): bool
+    {
+        $columns_log = $this->getColumnsLog();
+
+        $placeholders_log = array_map(function($column) 
+        {
+            return ":$column";
+        }, $columns_log);
+
+        $sql = 'INSERT INTO logs (' . implode(', ', $columns_log) . ') VALUES (' . implode(', ', $placeholders_log) . ')';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        for($i = 0; $i < count($columns_log); $i++)
+        {
+            $stmt->bindValue($placeholders_log[$i], $data[$columns_log[$i]]);
+        }
+
+        return $stmt->execute();
+    }
 }
