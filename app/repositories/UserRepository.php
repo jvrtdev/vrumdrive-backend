@@ -206,7 +206,7 @@ class UserRepository
         }
     }
 
-    public function updateUserById(array $data, $id)
+    public function updateUserById($data, $id)
     {
         $columns_user = $this->getColumnsUser();
 
@@ -240,10 +240,10 @@ class UserRepository
             $updateAddress = $this->updateAddressById($data, $id);
     
             if ($stmt->rowCount() > 0 || $updateAddress) {
-                return true; // Atualização bem-sucedida
+                return $fields; // Atualização bem-sucedida
             }
             
-            return false; // Nenhuma linha afetada  
+            return $fields; // Nenhuma linha afetada  
         } 
         catch (PDOException $e) 
         {
@@ -273,6 +273,18 @@ class UserRepository
         
         $stmt->bindValue(':id', $id);
         
+        return $stmt->execute();
+    }
+
+    public function updateProfileImgByUserId($imgUrl, $id)
+    {
+        $sql = 'UPDATE users SET profile_img = :imgUrl WHERE id_user = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':imgUrl', $imgUrl);
+        $stmt->bindValue(':id', $id);
+
         return $stmt->execute();
     }
 }
