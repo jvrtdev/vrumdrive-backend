@@ -10,9 +10,9 @@ class Database
 {
     public function getConnection(): PDO
     {
-        $dsn = "mysql:host=vrumdrive-db.cvuuqw68ubdh.us-east-1.rds.amazonaws.com;dbname=vrumvrum";
+        $dsn = "mysql:host=".$_ENV['DB_HOST'].";dbname=". $_ENV['DB_NAME'];
         
-        $pdo = new PDO($dsn, "admin", "wNbg(%[Jb)CB#v)96<3G?JN>tL?x", [
+        $pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASS'], [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
 
