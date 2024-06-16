@@ -97,7 +97,7 @@ class UploadController
         try {
             $result = $this->s3Client->putObject([
                 'Bucket' => $this->bucketName,
-                'Key'    => "vehicles/{$filename}",
+                'Key'    => "public/{$filename}",
                 'Body'   => $stream,
                 'ACL'    => 'public-read', // Opcional: se quiser que o arquivo seja público
             ]);
