@@ -35,10 +35,10 @@ class VehicleController
         }
     }
 
-    public function getVehicleById(Request $request, Response $response, $args)
+    public function getVehicleByModel(Request $request, Response $response, $args)
     {   
         try{
-            $data = $this->vehicleRepository->getVehicleById($args['id']);
+            $data = $this->vehicleRepository->getVehicleByModel($args['modelo']);
             
             $body = json_encode($data); 
 
