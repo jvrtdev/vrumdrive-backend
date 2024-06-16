@@ -37,6 +37,14 @@ class UserRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    public function getAllUsersWithoutJoin()
+    {
+        $stmt = $this->pdo->query('SELECT * FROM users');
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     public function getUserById($id): array
     {
@@ -45,7 +53,14 @@ class UserRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
-    public function getUserLogin($login): array
+    public function getUserByIdWithoutJoin($id)
+    {
+        $stmt = $this->pdo->query('SELECT * FROM users WHERE id_user =' . $id);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
+
+    public function getUserLogin($login)
     {
         $sql = 'SELECT * FROM users WHERE login = :login';
 

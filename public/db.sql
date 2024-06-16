@@ -62,6 +62,14 @@ CREATE TABLE vehicles (
   FOREIGN KEY(id_details) REFERENCES vehicles_details(id_details)
 );
 
+CREATE TABLE vehicles_images (
+  id_vehicle_img INT PRIMARY KEY AUTO_INCREMENT(),
+  id_vehicle INT NOT NULL,
+  img VARCHAR(100) NOT NULL,
+
+  FOREIGN KEY id_vehicle REFERENCES vehicles(id_vehicle)
+);
+
 CREATE TABLE bookings (
   id_booking INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   id_user INT NOT NULL,

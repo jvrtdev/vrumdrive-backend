@@ -37,6 +37,7 @@ class AuthUser
       'id' => $userData['id_user'],
       'login' => $userData['login'],
       'senha' => $userData['senha'],
+      'tipo' => $userData['tipo'],
       'exp' => $expirationTime,
     ];
     

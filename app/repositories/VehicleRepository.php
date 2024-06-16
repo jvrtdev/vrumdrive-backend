@@ -210,4 +210,16 @@ class VehicleRepository
         
         return $stmt->execute();
     }
+
+    public function addVehicleImgById($id, $imgUrl)
+    {
+        $sql = 'INSERT INTO vehicles_images(id_vehicle, img) VALUES (:id, :imgUrl)';
+        
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':imgUrl', $imgUrl);
+        $stmt->bindValue(':id', $id);
+
+        return $stmt->execute();
+    }
 }
