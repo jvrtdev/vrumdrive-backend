@@ -42,40 +42,41 @@ class UploadController
     {
         $uploadedFiles = $request->getUploadedFiles();
 
-    if (empty($uploadedFiles['image'])) {
-        $response->getBody()->write('No file uploaded');
-        return $response->withStatus(400);
-    }
-
-    $uploadedFile = $uploadedFiles['image'];
-
-    if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-        $filename = $uploadedFile->getClientFilename();
-        $stream = $uploadedFile->getStream();
-
-        try {
-            $result = $this->s3Client->putObject([
-                'Bucket' => $this->bucketName,
-                'Key'    => "users_profile/{$filename}",
-                'Body'   => $stream,
-                'ACL'    => 'public-read', // Opcional: se quiser que o arquivo seja público
-            ]);
-
-            $imageUrl = $result['ObjectURL'];
-            
-            $userImgUpdated = $this->userRepository->updateProfileImgByUserId($imageUrl, $args['id']);
-            
-                        
-            $response->getBody()->write('File uploaded successfully: ' . $imageUrl);
-            return $response->withStatus(200);
-        } catch (AwsException $e) {
-            $response->getBody()->write('Error uploading file: ' . $e->getMessage());
-            return $response->withStatus(500);
+        if (empty($uploadedFiles['image'])) {
+            $response->getBody()->write('No file uploaded');
+            return $response->withStatus(400);
         }
-    }
 
-    $response->getBody()->write('Error uploading file');
-    return $response->withStatus(500);
+        $uploadedFile = $uploadedFiles['image'];
+
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = $uploadedFile->getClientFilename();
+            $stream = $uploadedFile->getStream();
+
+            try {
+                $result = $this->s3Client->putObject([
+                    'Bucket' => $this->bucketName,
+                    'Key'    => "users_profile/{$filename}",
+                    'Body'   => $stream,
+                    'ACL'    => 'public-read', // Opcional: se quiser que o arquivo seja público
+                ]);
+
+                $imageUrl = $result['ObjectURL'];
+                
+                $userImgUpdated = $this->userRepository->updateProfileImgByUserId($imageUrl, $args['id']);
+                
+                            
+                $response->getBody()->write('File uploaded successfully: ' . $imageUrl);
+                return $response->withStatus(200);
+            }
+            catch (AwsException $e)
+            {
+                $response->getBody()->write('Error uploading file: ' . $e->getMessage());
+                return $response->withStatus(500);
+            }
+        }
+        $response->getBody()->write('Error uploading file');
+        return $response->withStatus(500);
     }
 
     public function uploadVehicleImages(Request $request, Response $response, $args)

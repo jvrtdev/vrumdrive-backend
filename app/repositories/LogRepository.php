@@ -26,7 +26,7 @@ class LogRepository
 
     public function getAllLogs(): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM logs');
+        $stmt = $this->pdo->query('SELECT * FROM logs LEFT JOIN users ON (logs.id_user = users.id_user)');
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
