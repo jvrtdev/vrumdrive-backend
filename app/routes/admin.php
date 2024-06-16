@@ -11,7 +11,6 @@ return function ($app) {
       $group->get('/users', UserController::class . ':getUsers');
       $group->delete('/user/delete/{id}', UserController::class . ':deleteUserById');
       $group->get('/user/{id}', UserController::class . ':getUserById');
-      $group->put('/user/update/{id}', UserController::class . ':updateUserById');
 
       // rotas dos veículos
       $group->post('/upload/vehicle/{id}', UploadController::class . ':uploadVehicleImages');
