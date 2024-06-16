@@ -26,6 +26,17 @@ $app->add(function ($request, $handler) {
     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
 
+// Middleware de CORS
+$corsMiddleware = function ($request, $handler) {
+  $response = $handler->handle($request);
+  return $response
+      ->withHeader('Access-Control-Allow-Origin', '*') // Pode ser ajustado para http://localhost:3000 para ser mais restritivo
+      ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+      ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+};
+
+$app->add($corsMiddleware);
+
 //rotas da aplicacao
 (require __DIR__ . "/../app/routes/users.php")($app);
 (require __DIR__ . "/../app/routes/vehicles.php")($app);
