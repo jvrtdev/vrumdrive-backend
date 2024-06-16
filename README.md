@@ -1,48 +1,258 @@
-<h1>VrumDrive - Backend</h1>
-<p>Este é o backend de uma aplicação de locadora de veículos, desenvolvido em PHP utilizando o Slim Framework.</h2>
+# Documentação da API
+
+## Visão Geral
+
+Esta API possui diversas rotas, segmentadas para diferentes tipos de usuários: administradores, usuários comuns e gerenciamento de reservas. Além disso, há rotas específicas para registro de logs do sistema.
+
+---
+
+## Rotas do Usuário Admin
+
+### Listar todos os usuários
+**GET** `/api/admin/users`
+
+**Headers:** `Authorization: Bearer token`: string 
+
+**Descrição:** Retorna uma lista com todos os usuários cadastrados no sistema.
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+- **Corpo:** Lista de usuários (formato JSON)
+
+### Deletar usuário pelo ID
+**DELETE** `/api/admin/user/{id}`
+
+**Headers:** `Authorization: Bearer token`: string 
 
 
-<h2>Requisitos</h2>
+**Descrição:** Deleta um usuário específico baseado no seu ID.
 
-<li>PHP 7.0 ou superior</li>
-<li>Composer (para gerenciamento de dependências)</li>
+**Parâmetros de URL:**
+- `id` (integer): ID do usuário a ser deletado.
 
-<h2>Instalação</h2>
+**Resposta de Sucesso:**
+- **Status:** 200 OK
 
-1 - Clone este repositório para o seu ambiente local:
+### Listar usuário pelo ID
+**GET** `/api/admin/{id}`
 
-<code>git clone https://github.com/jvrtdev/backend-php.git</code>
-<br><br><br>
-2 - Navegue até o diretório do projeto:
+**Headers:** `Authorization: Bearer token`: string 
 
-<code>cd locadora-backend</code>
-<br><br><br>
-3 - Instale as dependências do projeto utilizando o Composer:
+**Descrição:** Retorna as informações de um usuário específico baseado no seu ID.
 
-<code>composer install</code>
-<br><br><br>
-4 - Configuração:
+**Parâmetros de URL:**
+- `id` (integer): ID do usuário a ser listado.
 
-<p>Antes de executar o projeto, você precisa configurar algumas variáveis de ambiente. Renomeie o arquivo .env.example para .env e configure as variáveis de ambiente conforme necessário.</p>
-<br><br><br>
-<h4>Exemplo de .env:</h4>
-<code>
-DB_HOST=localhost
-DB_NAME=nomebd
-DB_USER=usuario
-DB_PASS=senha
-</code>
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+- **Corpo:** Dados do usuário (formato JSON)
 
-<h4>Uso:</h4>
+### Upload de imagem do veículo
+**POST** `/api/admin/vehicle/{id}`
 
-Após a instalação e configuração, você pode iniciar o servidor local para executar o backend:
+**Headers:** `Authorization: Bearer token`: string 
 
-<code>php -S localhost:8000 -t public</code>
-O backend estará acessível em http://localhost:8000.
+**Descrição:** Faz o upload de uma imagem de um veículo associado ao ID do veículo.
 
-                               
+**Parâmetros de URL:**
+- `id` (integer): ID do veículo.
 
+**Corpo da Requisição:**
+- Formato: multipart/form-data
+  - `file`: Arquivo da imagem do veículo.
 
-Licença
-Este projeto está licenciado sob a Licença MIT.
+**Resposta de Sucesso:**
+- **Status:** 201 Created
 
+---
+
+## Rotas do Usuário Comum
+
+### Criação do usuário
+**POST** `/api/user/create`
+
+**Descrição:** Cria um novo usuário no sistema.
+
+**Corpo da Requisição:**
+- Formato: JSON
+  - `nome`: string
+  - `nome_mat`:string
+  - `email`: string
+  - `login`: string
+  - `senha`: string
+  - `dataNascimento`: string (YYYY-MM-DD)
+  - `genero`: ENUM('F', 'M', 'O')
+  - `cpf`: string
+  - `celular`: string
+
+**Resposta de Sucesso:**
+- **Status:** 201 Created
+- **Corpo:** Dados do usuário criado (formato JSON)
+
+### Login e autorização do usuário
+**POST** `/api/user/login`
+
+**Descrição:** Realiza o login e autoriza o usuário.
+
+**Corpo da Requisição:**
+- Formato: JSON
+  - `login`: string || `email`: string
+  - `senha`: string
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+
+### Rota de 2FA do usuário
+**POST** `/api/user/2FA/{id}`
+
+**Descrição:** Realiza a autenticação de dois fatores para o usuário.
+
+**Parâmetros de URL:**
+- `id` (integer): ID do usuário.
+
+**Corpo da Requisição:**
+- Token de autenticação JWT (formato JSON)
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+
+### Lista todas as informações do usuário
+**GET** `/api/user/{id}`
+
+**Headers:** Authorization: Bearer token: string 
+
+**Descrição:** Retorna todas as informações de um usuário específico.
+
+**Parâmetros de URL:**
+- `id` (integer): ID do usuário.
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+- **Corpo:** Dados completos do usuário (formato JSON)
+
+### Alteração de usuário
+**PUT** `/api/user/update/{id}`
+
+**Headers:** `Authorization: Bearer token`: string 
+
+**Descrição:** Atualiza as informações de um usuário específico.
+
+**Parâmetros de URL:**
+- `id` (integer): ID do usuário.
+
+**Corpo da Requisição:**
+- Formato: JSON
+  - `nome` (opcional): string
+  - `email` (opcional): string
+  - `senha` (opcional): string
+  - `dataNascimento` (opcional): string (YYYY-MM-DD)
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+
+### Exclusão de usuário
+**DELETE** `/api/user/delete/{id}`
+
+**Headers:** `Authorization: Bearer token`: string 
+
+**Descrição:** Exclui um usuário específico.
+
+**Parâmetros de URL:**
+- `id` (integer): ID do usuário.
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+
+### Upload da foto de perfil do usuário
+**POST** `/api/upload/user/{id}`
+
+**Headers:** `Authorization: Bearer token`: string 
+
+**Descrição:** Faz o upload da foto de perfil de um usuário específico.
+
+**Parâmetros de URL:**
+- `id` (integer): ID do usuário.
+
+**Corpo da Requisição:**
+- Formato: multipart/form-data
+  - `file`: Arquivo da foto de perfil.
+
+**Resposta de Sucesso:**
+- **Status:** 201 Created
+
+---
+
+## Rotas do Log
+
+### Listar todos os logs do sistema
+**GET** `/api/admin/log`
+
+**Headers:** `Authorization: Bearer token`: string 
+
+**Descrição:** Retorna uma lista com todos os logs do sistema.
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+- **Corpo:** Lista de logs (formato JSON)
+
+### Criar um registro na tabela de log
+**POST** `/api/admin/log`
+
+**Headers:** `Authorization: Bearer token`: string 
+
+**Descrição:** Cria um registro na tabela de log ao autenticar um usuário.
+
+**Corpo da Requisição:**
+- Formato: JSON
+  - `pickupDate`: datetime (YYYY-MM-DDTHH:HH)
+  - `returnDate`: datetime (YYYY-MM-DDTHH:HH)
+  - `id_vehicle`: number
+
+**Resposta de Sucesso:**
+- **Status:** 201 Created
+
+---
+
+## Rotas de Reserva
+
+### Calcular o valor da reserva
+**POST** `/api/booking/price`
+
+**Descrição:** Calcula o valor da reserva e retorna o valor total.
+
+**Resposta de Sucesso:**
+- **Status:** 200 OK
+- **Corpo:**
+  - {
+	`interval_days`: number,
+	`total_price`: number,
+	`vehicle`: {
+		`id_vehicle`: number,
+		`img`: string,
+		`modelo`: string,
+		`marca`: string,
+		`categoria`: string,
+		`ano`: year,
+		`status`: boolean( 0 || 1)
+		`preco`: float
+	}
+}
+
+### Agendar uma nova reserva
+**POST** `/api/booking/create`
+
+**Headers:** `Authorization: Bearer token`: string 
+
+**Descrição:** Cria uma nova reserva no sistema.
+
+**Corpo da Requisição:**
+- Formato: JSON
+  - `id_user`: number
+  - `id_vehicle`: number
+  - `pickupDate`: datetime (YYYY-MM-DDTHH:HH)
+  - `returnDate`: datetime (YYYY-MM-DDTHH:HH)
+  - `location`: string
+
+**Resposta de Sucesso:**
+- **Status:** 201 Created
+- **Corpo:** Dados da reserva criada (formato JSON)
