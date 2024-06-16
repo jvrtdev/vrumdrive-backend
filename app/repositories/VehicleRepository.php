@@ -37,6 +37,13 @@ class VehicleRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getVehicleById($id): array
+    {
+        $stmt = $this->pdo->query('SELECT * FROM vehicles LEFT JOIN vehicles_details ON (vehicles.id_details = vehicles_details.id_details) WHERE id_vehicle = ' . $id);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
     
     public function getVehicleByModel($modelo): array
     {
