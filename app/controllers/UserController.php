@@ -122,16 +122,10 @@ class UserController
       $user = $this->userRepository->getUserLogin($data["login"]);
 
       $verify = password_verify($data["senha"], $user["senha"]);
-      
+
       if ($verify)
       {
-        $token = $this->auth->createToken($user);
-      
-        // Retorna o token JWT no cabeçalho de autorização
-        $response->withHeader('Authorization', $token);
-        
-        // Retorne o token JWT na resposta
-        $response->getBody()->write(json_encode(['token' => $token]));
+        $response->getBody()->write(json_encode(['message' => "sucesso"]));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
       }
     }
@@ -149,11 +143,19 @@ class UserController
     try{
       $user = $this->userRepository->getUserById($args["id"]);
 
-      $fa = $this->userRepository->twoFactor($user, $data);
+      $verify = $this->userRepository->twoFactor($user, $data);
+
+      if ($verify)
+      {
+        $token = $this->auth->createToken($user);
       
-      $response->getBody()->write(json_encode(['message' => $fa]));
-      return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-      
+        // Retorna o token JWT no cabeçalho de autorização
+        $response->withHeader('Authorization', $token);
+        
+        // Retorne o token JWT na resposta
+        $response->getBody()->write(json_encode(['token' => $token]));
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+      }
     }
     catch(PDOException $e)
     {
