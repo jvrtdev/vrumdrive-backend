@@ -125,7 +125,13 @@ class UserController
 
       if ($verify)
       {
-        $response->getBody()->write(json_encode(['message' => "sucesso"]));
+        $token = $this->auth->createToken($user);
+      
+        // Retorna o token JWT no cabeçalho de autorização
+        $response->withHeader('Authorization', $token);
+        
+        // Retorne o token JWT na resposta
+        $response->getBody()->write(json_encode(['token' => $token]));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
       }
     }
@@ -147,13 +153,7 @@ class UserController
 
       if ($verify)
       {
-        $token = $this->auth->createToken($user);
-      
-        // Retorna o token JWT no cabeçalho de autorização
-        $response->withHeader('Authorization', $token);
-        
-        // Retorne o token JWT na resposta
-        $response->getBody()->write(json_encode(['token' => $token]));
+        $response->getBody()->write(json_encode(['message' => "sucesso"]));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
       }
     }
