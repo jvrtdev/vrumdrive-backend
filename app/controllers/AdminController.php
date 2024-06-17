@@ -43,4 +43,17 @@ class AdminController
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
     }
+
+    public function getProfits(Request $request, Response $response){
+        try{
+            $data = $this->adminRepository->getProfits();
+
+            $response->getBody()->write(json_encode(['profits' => $data]));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        }
+        catch(PDOException $e){
+            $response->getBody()->write(json_encode($e->getMessage()));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+    }
 }

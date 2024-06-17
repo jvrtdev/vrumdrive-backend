@@ -7,14 +7,19 @@ namespace App\Repositories;
 use App\Database;
 use PDO;
 use PDOException;
+use App\Repositories\BookingRepository;
 
 class AdminRepository
 {   
     protected $pdo;
 
+    protected $bookingRepository;
+
     public function __construct(Database $database)
     {
         $this->pdo = $database->getConnection();
+
+        $this->bookingRepository = new BookingRepository($database);
     }
 
     public function getSubscribes()
@@ -29,5 +34,17 @@ class AdminRepository
         $stmt = $this->pdo->query('SELECT COUNT(*) FROM bookings');
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["COUNT(*)"];
+    }
+
+    public function getProfits()
+    {
+        $reservas =  $this->bookingRepository->getAllBookings();
+        $profits = 0;
+
+        for($i = 0; $i < count($reservas); $i++){
+            $profits += $reservas[0]["preco"];
+        }
+
+        return $profits;
     }
 }
