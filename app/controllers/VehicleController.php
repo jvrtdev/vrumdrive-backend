@@ -74,8 +74,8 @@ class VehicleController
         $data = get_object_vars(json_decode($request->getBody()));
 
         try{
-            $result = $this->vehicleRepository->createVehicle($data);
-            $response->getBody()->write(json_encode(['message' => 'Vehicle create successfully',$result]));
+            $this->vehicleRepository->createVehicle($data);
+            $response->getBody()->write(json_encode(['message' => 'Vehicle create successfully']));
             return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
         }
         catch(PDOException $e)
