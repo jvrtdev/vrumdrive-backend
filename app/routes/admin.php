@@ -20,6 +20,7 @@ return function ($app) {
       $group->post('/vehicle/create', VehicleController::class . ':createVehicle');
       $group->put('/vehicle/update/{id}', VehicleController::class . ':updateVehicleById');
       $group->delete('/vehicle/delete/{id}', VehicleController::class . ':deleteVehicleById');
+      $group->get('/vehicle/available', AdminController::class . ':GetVehicleByAvailable');
 
       // rotas dos agendamentos
       $group->get('/bookings', AdminController::class . ':getBookings');
