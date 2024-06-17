@@ -7,14 +7,19 @@ namespace App\Repositories;
 use App\Database;
 use PDO;
 use PDOException;
+use App\Repositories\UserRepository;
 
 class LogRepository
 {
     protected $pdo;
 
+    protected $userRepository;
+
     public function __construct(Database $database)
     {
         $this->pdo = $database->getConnection();
+
+        $this->userRepository = new userRepository($database);
     }
 
     public function getColumnsLog(): array
@@ -43,8 +48,7 @@ class LogRepository
         $columns_log = $this->getColumnsLog();
         unset($columns_log[1]);
 
-        $query = $this->pdo->query('SHOW COLUMNS FROM users');
-        $columns_user = $query->fetchAll(PDO::FETCH_COLUMN);
+        $columns_user = $this->userRepository->getColumnsUser();
         array_shift($columns_user);
 
         $columns = array_merge($columns_log, $columns_user);
