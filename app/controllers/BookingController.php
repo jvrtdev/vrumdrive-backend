@@ -59,7 +59,14 @@ class BookingController
     $data = get_object_vars(json_decode($request->getBody()));
     
     try{
-      $vehicle = $this->vehicleRepository->getVehicleById($data['id_vehicle']); 
+      $vehicle = $this->vehicleRepository->getVehicleById($data['id_vehicle']);
+      
+      if($vehicle["status"] == "ocupado")
+      {
+        $response->getBody()->write(json_encode(["message" => "Veículo já reservado"]));
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+      }
+      
       $pricePerDay = $vehicle['preco'];
       
       $days = $this->bookingService->calculateIntervalDays($data['pickup_date_time'],$data['return_date_time']);
@@ -67,9 +74,9 @@ class BookingController
       
       $data['total_price'] = $bookingPrice;
 
-      $newBooking = $this->bookingRepository->createNewBooking($data);
+      $this->bookingRepository->createNewBooking($data);
 
-      $this->vehicleRepository->updateVehicleById(["state" => "ocupado"], $data['id_vehicle']);
+      $this->vehicleRepository->updateVehicleById(["status" => "ocupado"], $data['id_vehicle']);
       
       $response->getBody()->write(json_encode(["message" => "Reserva feita com sucesso!"]));
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
