@@ -94,17 +94,26 @@ class BookingController
     }
   }
   
-  public function getAllBookings(Request $resquest, Response $response, $args)
-  {
-    
-  }
-  
-  public function getBookingByUserId(Request $resquest, Response $response, $args)
+  public function getAllBookings(Request $resquest, Response $response)
   {
     try{
-      // $data["booking"] = $this->bookingRepository->getBookingById($args["id"])[0];
-      // $data["user"] = $this->userRepository->getUserById($data["booking"]["id_user"]);
-      // $data["vehicle"] = $this->vehicleRepository->getVehicleById($data["booking"]["id_vehicle"]);
+      $data = $this->bookingRepository->getAllBookings();
+
+      $body = json_encode($data);
+      
+      $response->getBody()->write($body);
+      return $response->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+  }
+  
+  public function getBookingById(Request $resquest, Response $response, $args)
+  {
+    try{
       $data = $this->bookingRepository->getBookingById($args["id"]);
 
       $body = json_encode($data);
@@ -121,6 +130,16 @@ class BookingController
   
   public function deleteBookingById(Request $resquest, Response $response, $args)
   {
-    
+    try{
+      $this->bookingRepository->deleteBookingById($args["id"]);
+      
+      $response->getBody()->write(json_encode(['message' => "sucesso"]));
+      return $response->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
   }
 }
