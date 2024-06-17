@@ -55,7 +55,9 @@ class AuthAdminJwt
             
                
         } catch (Exception $e) {
-           
+          $response = new \Slim\Psr7\Response();
+          $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
+          return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
       }
       
