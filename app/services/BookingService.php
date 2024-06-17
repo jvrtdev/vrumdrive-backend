@@ -12,7 +12,6 @@ class BookingService
       $date = new \DateTime($dateString);
 
       //formatar o objeto DateTime para pegar apenas o dia 
-      //$day = $date->format('d');
 
       return $date;      
     }
@@ -37,8 +36,6 @@ class BookingService
       $interval = $startDate->diff($endDate);
 
       //pegar o intervalo em meses e dias
-      //$months = $interval->m + ($interval->y * 12);
-      //$days = $interval->d;
 
       return $interval->days;
     }

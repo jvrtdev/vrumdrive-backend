@@ -51,28 +51,6 @@ class UploadService
       ]
     ]);
   }
-    
-
-
-
-  /*public function ImgUserProfile($filename, $stream)
-  {
-      try{
-        $result = $this->client->putObject([
-            'Bucket' => $this->bucketName,
-            'Key'    => "users_profile/{$filename}",
-            'Body'   => $stream,
-            'ACL'    => 'public-read', // Opcional: se quiser que o arquivo seja público
-        ]);
-
-        return $result['ObjectURL'];      
-      }
-      catch(AwsException $e)
-      {
-        return $e->getMessage();
-      }
-    
-  }*/
   
   public function uploadProfileImgToS3($filename, $stream)
   {

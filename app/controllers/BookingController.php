@@ -35,7 +35,6 @@ class BookingController
       
       $vehicle = $this->vehicleRepository->getVehicleById($data['id_vehicle']); 
       $pricePerDay = $vehicle['preco'];
-      //printf($pricePerDay);
       $days = $this->bookingService->calculateIntervalDays($data['pickupDate'],$data['returnDate']);
       $bookingPrice = $this->bookingService->calculateBooking($pricePerDay, $days);
 

@@ -62,7 +62,7 @@ class Validate
             if(strlen($tel) != 16){
                 return "Número de caractéres inválido";
             }
-            // AND substr($tel, 9) > 5
+            
             if(substr($tel, 0, 8) != "(+55)21-" || 2 > substr($tel, 8, 1) || substr($tel, 8, 1) > 5 || !preg_match('/^\d+$/', substr($tel, 10, 7))){
                 return "Formato incorreto";
             }

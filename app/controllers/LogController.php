@@ -40,7 +40,6 @@ class LogController
 
     public function getFilterLogs(Request $request, Response $response, $args) 
     {
-        //$columns_user = 
 
         $data = $this->LogRepository->getFilterLogs($args["value"]);
 
