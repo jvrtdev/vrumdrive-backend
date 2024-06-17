@@ -29,7 +29,7 @@ class AdminRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["COUNT(*)"];
     }
 
-    public function getBookings()
+    public function getNumberBookings()
     {
         $stmt = $this->pdo->query('SELECT COUNT(*) FROM bookings');
 
