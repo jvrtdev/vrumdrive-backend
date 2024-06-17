@@ -66,7 +66,7 @@ class UploadController
                 $userImgUpdated = $this->userRepository->updateProfileImgByUserId($imageUrl, $args['id']);
                 
                             
-                $response->getBody()->write(json_encode(['url' . $imageUrl]));
+                $response->getBody()->write(json_encode(['url' => $imageUrl]));
                 return $response->withStatus(200);
             }
             catch (AwsException $e)
