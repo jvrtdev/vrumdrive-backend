@@ -64,7 +64,7 @@ class BookingController
       if($vehicle["status"] == "ocupado")
       {
         $response->getBody()->write(json_encode(["message" => "Veículo já reservado"]));
-        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
       }
       
       $pricePerDay = $vehicle['preco'];
