@@ -54,7 +54,7 @@ class BookingController
 
   }
 
-  public function createNewBooking(Request $request, Response $response, $args)
+  public function createNewBooking(Request $request, Response $response)
   {
     $data = get_object_vars(json_decode($request->getBody()));
     
@@ -62,14 +62,16 @@ class BookingController
       $vehicle = $this->vehicleRepository->getVehicleById($data['id_vehicle']); 
       $pricePerDay = $vehicle['preco'];
       
-      $days = $this->bookingService->calculateIntervalDays($data['pickupDate'],$data['returnDate']);
+      $days = $this->bookingService->calculateIntervalDays($data['pickup_date_time'],$data['return_date_time']);
       $bookingPrice = $this->bookingService->calculateBooking($pricePerDay, $days);
       
       $data['total_price'] = $bookingPrice;
 
       $newBooking = $this->bookingRepository->createNewBooking($data);
+
+      $this->vehicleRepository->updateVehicleById(["state" => "ocupado"], $data['id_vehicle']);
       
-      $response->getBody()->write(json_encode(["Reserva feita com sucesso!" => $newBooking]));
+      $response->getBody()->write(json_encode(["message" => "Reserva feita com sucesso!"]));
       return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
       
     }
