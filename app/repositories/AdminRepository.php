@@ -42,16 +42,16 @@ class AdminRepository
         $profits = 0;
 
         for($i = 0; $i < count($reservas); $i++){
-            $profits += $reservas[0]["preco"];
+            $profits += $reservas[0]["total_price"];
         }
 
         return $profits;
     }
 
-    public function getVehicleByAvailable(): array
+    public function getVehicleByAvailable()
     {
-        $stmt = $this->pdo->query('SELECT * FROM vehicles WHERE status = "disponivel"');
+        $stmt = $this->pdo->query('SELECT COUNT(*) FROM vehicles WHERE status = "disponivel"');
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["COUNT(*)"];
     }
 }
