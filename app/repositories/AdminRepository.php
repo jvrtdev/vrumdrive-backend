@@ -47,4 +47,11 @@ class AdminRepository
 
         return $profits;
     }
+
+    public function getVehicleByAvailable(): array
+    {
+        $stmt = $this->pdo->query('SELECT * FROM vehicles WHERE status = "disponivel"');
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

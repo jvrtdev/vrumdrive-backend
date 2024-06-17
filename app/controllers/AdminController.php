@@ -56,4 +56,17 @@ class AdminController
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
     }
+    
+    public function getVehicleByAvailable(Request $request, Response $response){
+        try{
+            $data = $this->adminRepository->getVehicleByAvailable();
+
+            $response->getBody()->write(json_encode(['available' => $data]));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        }
+        catch(PDOException $e){
+            $response->getBody()->write(json_encode($e->getMessage()));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+    }
 }
