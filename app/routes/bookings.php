@@ -11,6 +11,8 @@ return function ($app) {
     // Rotas protegidas com JWT
     $app->group('/api', function (RouteCollectorProxy $group) {
        $group->post("/booking/create", BookingController::class . ':createNewBooking');
-       $group->get("/booking/{id}", BookingController::class . ':getBookingByUserId');
+       $group->get("/booking/{id}", BookingController::class . ':getBookingById');
+       $group->get("/bookings", BookingController::class . ':getAllBookings');
+       $group->delete("/booking/delete/{id}", BookingController::class . ':deleteBookingById');
     })->add(new AuthJwt());
 };
