@@ -42,7 +42,7 @@ class AdminRepository
         $profits = 0;
 
         for($i = 0; $i < count($reservas); $i++){
-            $profits += $reservas[0]["total_price"];
+            $profits += $reservas[$i]["total_price"];
         }
 
         return $profits;
