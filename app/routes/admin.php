@@ -23,6 +23,7 @@ return function ($app) {
 
       // rotas dos agendamentos
       $group->get('/bookings', AdminController::class . ':getBookings');
+      $group->get('/profits', AdminController::class . ':getProfits');
 
     })->add(new AuthAdminJwt());
     
