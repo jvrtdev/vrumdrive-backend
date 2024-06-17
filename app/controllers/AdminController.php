@@ -18,50 +18,19 @@ class AdminController
         $this->adminRepository = new AdminRepository($database);
     }
 
-    public function getSubscribes(Request $request, Response $response){
+    public function getAdminData(Request $request, Response $response){
         try{
-            $data = $this->adminRepository->getSubscribes();
+            $subs = $this->adminRepository->getSubscribes();
+            $bookings = $this->adminRepository->getNumberBookings();
+            $profits = $this->adminRepository->getProfits();
+            $available = $this->adminRepository->getVehicleByAvailable();
 
-            $response->getBody()->write(json_encode(['subs' => $data]));
-            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-        }
-        catch(PDOException $e){
-            $response->getBody()->write(json_encode($e->getMessage()));
-            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-        }
-    }
-
-    public function getBookings(Request $request, Response $response){
-        try{
-            $data = $this->adminRepository->getBookings();
-
-            $response->getBody()->write(json_encode(['bookings' => $data]));
-            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-        }
-        catch(PDOException $e){
-            $response->getBody()->write(json_encode($e->getMessage()));
-            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-        }
-    }
-
-    public function getProfits(Request $request, Response $response){
-        try{
-            $data = $this->adminRepository->getProfits();
-
-            $response->getBody()->write(json_encode(['profits' => $data]));
-            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-        }
-        catch(PDOException $e){
-            $response->getBody()->write(json_encode($e->getMessage()));
-            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-        }
-    }
-    
-    public function getVehicleByAvailable(Request $request, Response $response){
-        try{
-            $data = $this->adminRepository->getVehicleByAvailable();
-
-            $response->getBody()->write(json_encode(['available' => $data]));
+            $response->getBody()->write(json_encode([
+                "subs" => $subs,
+                "bookings" => $bookings,
+                "profits" => $profits,
+                "available" => $available
+            ]));
             return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
         }
         catch(PDOException $e){
