@@ -16,6 +16,13 @@ class BookingRepository
       $this->pdo = $database->getConnection();
     }
 
+    public function getColumnsBookings(): array
+    {
+      $stmt = $this->pdo->query('SHOW COLUMNS FROM bookings');
+
+      return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
     public function getAllBookings()
     {
       $sql = 'SELECT * FROM bookings';
@@ -57,19 +64,25 @@ class BookingRepository
 
     public function createNewBooking($data)
     {
-      $sql = 'INSERT INTO bookings (id_user, id_vehicle, location, pickup_date_time, return_date_time, total_price) VALUES(:id_user, :id_vehicle, :location, :pickup_date_time, :return_date_time, :total_price)';
-      
+      $columns_bookings = $this->getColumnsBookings();
+
+      array_shift($columns_bookings);
+
+      $placeholders_bookings = array_map(function($column) 
+      {
+          return ":$column";
+      }, $columns_bookings);
+
+      $sql = 'INSERT INTO bookings (' . implode(', ', $columns_bookings) . ') VALUES (' . implode(', ', $placeholders_bookings) . ')';
+
       $stmt = $this->pdo->prepare($sql);
-      $stmt->bindValue(':id_user', $data['id_user']);
-      $stmt->bindValue(':id_vehicle', $data['id_vehicle']);
-      $stmt->bindValue(':location', $data['location']);
-      $stmt->bindValue(':pickup_date_time', $data['pickup_date_time']);
-      $stmt->bindValue(':return_date_time', $data['return_date_time']);
-      $stmt->bindValue(':total_price', $data['total_price']);
 
-      $stmt->execute();
+      for($i = 0; $i < count($columns_bookings); $i++)
+      {
+          $stmt->bindValue($placeholders_bookings[$i], $data[$columns_bookings[$i]]);
+      }
 
-      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $stmt->execute();
     }
 
 
