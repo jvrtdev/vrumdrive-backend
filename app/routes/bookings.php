@@ -10,6 +10,6 @@ return function ($app) {
     $app->post("/api/booking/price", BookingController::class . ':getTotalPriceBooking');
     // Rotas protegidas com JWT
     $app->group('/api', function (RouteCollectorProxy $group) {
-       $group->post("/api/booking/create", BookingController::class . ':createNewBooking');
+       $group->post("/booking/create", BookingController::class . ':createNewBooking');
     })->add(new AuthJwt());
 };
