@@ -34,9 +34,9 @@ class BookingRepository
       return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getBookingsByUserId($id)
+    public function getBookingById($id)
     {
-      $sql = 'SELECT * FROM bookings WHERE id_user = :id';
+      $sql = 'SELECT * FROM bookings WHERE id_booking = :id';
 
       $stmt = $this->pdo->prepare($sql);
       $stmt->bindValue(':id', $id);
@@ -46,9 +46,16 @@ class BookingRepository
       return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateBookingById()
+    public function getBookingByUserId($id)
     {
-      
+      $sql = 'SELECT * FROM bookings LEFT JOIN vehicles ON (bookings.id_vehicle = vehicles.id_vehicle) LEFT JOIN users ON (bookings.id_user = users.id_user) WHERE id_user = :id';
+
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->bindValue(':id', $id);
+
+      $stmt->execute();
+
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     public function deleteBookingById($id)

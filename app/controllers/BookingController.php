@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Database;
 use App\Repositories\BookingRepository;
 use App\Repositories\VehicleRepository;
+use App\Repositories\UserRepository;
 use App\Services\BookingService;
 use PDOException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,6 +17,8 @@ class BookingController
   protected $bookingService;
 
   protected $vehicleRepository;
+
+  protected $userRepository;
   
   public function __construct()
   {
@@ -24,8 +27,10 @@ class BookingController
     $this->bookingRepository = new BookingRepository($database);
 
     $this->bookingService = new BookingService();
-
+    
     $this->vehicleRepository = new VehicleRepository($database);
+
+    $this->userRepository = new userRepository($database);
   }
 
   public function getTotalPriceBooking(Request $request, Response $response)
@@ -94,19 +99,28 @@ class BookingController
     
   }
   
-  public function getAllBookingsByUserId(Request $resquest, Response $response, $args)
+  public function getBookingByUserId(Request $resquest, Response $response, $args)
   {
-    
-  }
-  
-  public function updateBookingById(Request $resquest, Response $response, $args)
-  {
-    
+    try{
+      // $data["booking"] = $this->bookingRepository->getBookingById($args["id"])[0];
+      // $data["user"] = $this->userRepository->getUserById($data["booking"]["id_user"]);
+      // $data["vehicle"] = $this->vehicleRepository->getVehicleById($data["booking"]["id_vehicle"]);
+      $data = $this->bookingRepository->getBookingById($args["id"]);
+
+      $body = json_encode($data);
+      
+      $response->getBody()->write($body);
+      return $response->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
   }
   
   public function deleteBookingById(Request $resquest, Response $response, $args)
   {
     
   }
-  
 }
