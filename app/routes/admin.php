@@ -13,7 +13,6 @@ return function ($app) {
       $group->get('/users', UserController::class . ':getUsers');
       $group->delete('/user/delete/{id}', UserController::class . ':deleteUserById');
       $group->get('/user/{id}', UserController::class . ':getUserById');
-      $group->get('/subscribes', AdminController::class . ':getSubscribes');
 
       // rotas dos veículos
       $group->post('/upload/vehicle/{id}', UploadController::class . ':uploadVehicleImages');
@@ -22,9 +21,8 @@ return function ($app) {
       $group->delete('/vehicle/delete/{id}', VehicleController::class . ':deleteVehicleById');
       $group->get('/vehicle/available', AdminController::class . ':GetVehicleByAvailable');
 
-      // rotas dos agendamentos
-      $group->get('/bookings', AdminController::class . ':getBookings');
-      $group->get('/profits', AdminController::class . ':getProfits');
+      // rotas dos dados
+      $group->get('/data', AdminController::class . ':getAdminData');
 
     })->add(new AuthAdminJwt());
     
