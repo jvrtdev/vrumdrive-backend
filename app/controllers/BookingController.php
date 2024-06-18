@@ -127,6 +127,23 @@ class BookingController
       return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
   }
+
+  public function getBookingByUserId(Request $resquest, Response $response, $args)
+  {
+    try{
+      $data = $this->bookingRepository->getBookingByUserId($args["id"]);
+
+      $body = json_encode($data);
+      
+      $response->getBody()->write($body);
+      return $response->withHeader('Content-Type', 'application/json');
+    }
+    catch(PDOException $e)
+    {
+      $response->getBody()->write(json_encode($e->getMessage()));
+      return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+  }
   
   public function deleteBookingById(Request $resquest, Response $response, $args)
   {
