@@ -5,6 +5,7 @@ use Slim\Routing\RouteCollectorProxy;
 use App\Controllers\UserController;
 use App\Controllers\AdminController;
 use App\Controllers\VehicleController;
+use App\Controllers\BookingController;
 use App\Middleware\AuthAdminJwt;
 
 return function ($app) {
@@ -20,6 +21,11 @@ return function ($app) {
       $group->put('/vehicle/update/{id}', VehicleController::class . ':updateVehicleById');
       $group->delete('/vehicle/delete/{id}', VehicleController::class . ':deleteVehicleById');
       $group->get('/vehicle/available', AdminController::class . ':GetVehicleByAvailable');
+
+      // rotas das reservas
+      $group->get("/booking/{id}", BookingController::class . ':getBookingById');
+      $group->get("/bookings", BookingController::class . ':getAllBookings');
+      $group->delete("/booking/delete/{id}", BookingController::class . ':deleteBookingById');
 
       // rotas dos dados
       $group->get('/data', AdminController::class . ':getAdminData');
