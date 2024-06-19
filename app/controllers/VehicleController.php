@@ -76,10 +76,8 @@ class VehicleController
     {   
         try{
             $data = $this->vehicleRepository->getVehicleByModel($args['modelo']);
-
-            $imgs = $this->vehicleRepository->getImagesByVehicleId($data['id_vehicle']);
             
-            $data['images'] = $imgs[0];
+            $data['images'] = $this->vehicleRepository->getImagesByVehicleId($data['id_vehicle']);;
             
             $body = json_encode($data); 
 
