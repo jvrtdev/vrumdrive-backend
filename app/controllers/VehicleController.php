@@ -34,6 +34,23 @@ class VehicleController
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
     }
+    public function getImagesByModel(Request $request, Response $response, $args)
+    {
+     try{
+        $result = $this->vehicleRepository->getVehicleByModel($args['modelo']);
+        
+        $imgs = $this->vehicleRepository->getImagesByVehicleId($result['id_vehicle']);
+
+        $response->getBody()->write(json_encode($imgs));
+      
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+     }
+     catch(PDOException $e)
+     {
+        $response->getBody()->write(json_encode($e->getMessage()));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+     } 
+    }
 
     public function getVehicleById(Request $request, Response $response, $args)
     {   
