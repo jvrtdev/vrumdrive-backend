@@ -41,7 +41,7 @@ class VehicleController
         
         $imgs = $this->vehicleRepository->getImagesByVehicleId($result['id_vehicle']);
 
-        $response->getBody()->write(json_encode($imgs));
+        $response->getBody()->write(json_encode($imgs[0]));
       
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
      }
