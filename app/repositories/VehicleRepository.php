@@ -62,7 +62,7 @@ class VehicleRepository
 
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
         
     }
 
