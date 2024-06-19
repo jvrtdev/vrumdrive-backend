@@ -49,7 +49,7 @@ class VehicleRepository
     {
         $stmt = $this->pdo->query('SELECT * FROM vehicles LEFT JOIN vehicles_details ON (vehicles.id_details = vehicles_details.id_details) WHERE modelo = "' . $modelo . '"');
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
     public function getImagesByVehicleId($id)
