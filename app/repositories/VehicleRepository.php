@@ -54,13 +54,7 @@ class VehicleRepository
 
     public function getImagesByVehicleId($id)
     {
-        $sql = 'SELECT * FROM vehicles_images WHERE id_vehicle = :id';
-
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->bindValue(':id', $id);
-
-        $stmt->execute();
+        $stmt = $this->pdo->query('SELECT * FROM vehicles_images WHERE id_vehicle = ' . $id);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
         
