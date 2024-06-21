@@ -1,7 +1,7 @@
 <?php
 
 use Slim\Routing\RouteCollectorProxy;
-use App\Controllers\twoFactorController;
+use App\Controllers\TwoFactorController;
 use App\Middleware\AuthJwt;
 
 return function ($app) {
