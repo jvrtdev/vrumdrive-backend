@@ -162,23 +162,6 @@ class UserRepository
         return $this->createAddress($data_columns, $id_user);
     }
 
-    public function twoFactor($user, $data): bool
-    {
-        $verifier = ["data_nasc" => $user["data_nasc"], "nome_mat" => $user["nome_mat"], "cep" => $user["cep"]];
-        $response = "";
-
-        foreach($verifier as $key => $value){
-            if($value == $data["response"]){
-                $response = $key;
-            }
-        }
-
-        if($data["request"] == $response){
-            return true;
-        }
-        return false;
-    }
-
     public function updateAddressById(array $data, $id_user)
     {
         $columns_address = $this->getColumnsAddress();
