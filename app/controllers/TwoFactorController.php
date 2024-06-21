@@ -31,11 +31,11 @@ class TwoFactorController
 
             if ($verify)
             {
-                $response->getBody()->write(json_encode(['message' => "sucesso"]));
+                $response->getBody()->write(json_encode(['fator_autenticacao' => $verify]));
                 return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
             }
 
-            $response->getBody()->write(json_encode(['message' => "falha"]));
+            $response->getBody()->write(json_encode(['message' => $verify]));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
         catch(PDOException $e)
