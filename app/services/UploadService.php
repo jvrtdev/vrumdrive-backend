@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Services;
+
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 use Exception;
@@ -24,20 +26,22 @@ class UploadService
   }
 
   public function uploadImage($file, $fileName)
-    {
-        try {
-            $result = $this->client->putObject([
-                'Bucket' => $this->bucketName,
-                'Key'    => $fileName,
-                'SourceFile' => $file,
-                'ACL'    => 'public-read', // Permite leitura pública
-            ]);
+  {
+    try {
+      $result = $this->client->putObject([
+          'Bucket' => $this->bucketName,
+          'Key'    => $fileName,
+          'SourceFile' => $file,
+          'ACL'    => 'public-read', // Permite leitura pública
+      ]);
 
-            return $result->get('ObjectURL');
-        } catch (AwsException $e) {
-            throw new Exception('Erro ao fazer upload da imagem: ' . $e->getMessage());
-        }
+      return $result->get('ObjectURL');
     }
+    catch (AwsException $e)
+    {
+      throw new Exception('Erro ao fazer upload da imagem: ' . $e->getMessage());
+    }
+  }
     
 
   public function awsS3Client()
@@ -54,7 +58,6 @@ class UploadService
   
   public function uploadProfileImgToS3($filename, $stream)
   {
-    
     try {
       $result = $this->client->putObject([
           'Bucket' => $this->bucketName,
@@ -65,11 +68,11 @@ class UploadService
 
       $imageUrl = $result['ObjectURL'];
       return $imageUrl;
-      
-  } catch (AwsException $e) {
-      return false;
-  }
-      
+    } 
+    catch (AwsException $e) 
+    {
+        return false;
+    }
   }
 
   public function ImgPublic($uploadedFile)
@@ -98,9 +101,6 @@ class UploadService
       }
     }
   }
-
-
-
 
   public function ImgUserProfile($file)
   {
