@@ -6,16 +6,21 @@ namespace App\Services;
 
 use App\Database;
 use App\Repositories\UserRepository;
+use App\Repositories\LogRepository;
 
 class TwoFactorService
 {
     protected $userRepository;
+
+    protected $logRepository;
 
     public function __construct() 
     {
         $database = new Database;
         
         $this->userRepository = new UserRepository($database);
+
+        $this->logRepository = new LogRepository($database);
     }
 
     public function twoFactor($id, $data)
@@ -38,7 +43,7 @@ class TwoFactorService
         if($data["question"] == $response)
         {
             $_SESSION['failed_attempts'] = 0;
-            return $response;
+            return $this->logRepository->createLog(["id_user" => $id, "fator_autenticacao" => $response, "data_hora_login" => date('Y-m-d H:i:s')]);
         }
 
         if($_SESSION['failed_attempts'] >= 2)
