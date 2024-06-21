@@ -38,7 +38,7 @@ class AuthJwt
         } catch (Exception $e) {
             $response = new \Slim\Psr7\Response();
             print_r($e->getMessage());
-            $response->getBody()->write(json_encode(['error' => 'Erro ao autenticar ']));
+            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
       }
