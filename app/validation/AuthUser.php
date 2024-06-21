@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Validation;
 
 use App\Database;
@@ -13,8 +14,6 @@ class AuthUser
   protected $secret_key;
 
   protected $userRepository;
-
-  protected int $time;
   
   public function __construct($secret_key)
   {
@@ -23,22 +22,15 @@ class AuthUser
     $database = new Database;
       
     $this->userRepository = new UserRepository($database);
-
-    $this->time = 86400;//1 hora = tempo em segundos de expiracao do token
-
   }
   
   public function createToken($userData) :string
   {
-    $now = time();
-    $expirationTime = $now + $this->time;
-
     $payload = [
       'id' => $userData['id_user'],
       'login' => $userData['login'],
       'senha' => $userData['senha'],
-      'tipo' => $userData['tipo'],
-      'exp' => $expirationTime,
+      'tipo' => $userData['tipo']
     ];
     
     $jwt = JWT::encode($payload, $this->secret_key , 'HS256');//args->informacoes, chave secreta, criptografia
