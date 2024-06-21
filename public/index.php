@@ -44,5 +44,6 @@ $app->add($corsMiddleware);
 (require __DIR__ . "/../app/routes/uploads.php")($app);
 (require __DIR__ . "/../app/routes/log.php")($app);
 (require __DIR__ . "/../app/routes/admin.php")($app);
+(require __DIR__ . "/../app/routes/twoFactor.php")($app);
 
 $app->run();
