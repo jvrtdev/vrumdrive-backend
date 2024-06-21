@@ -69,9 +69,11 @@ class LogRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createLog(array $data): bool
+    public function createLog($data): bool
     {
         $columns_log = $this->getColumnsLog();
+
+        array_shift($columns_log);
 
         $placeholders_log = array_map(function($column) 
         {
