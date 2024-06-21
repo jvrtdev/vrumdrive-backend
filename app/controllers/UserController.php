@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Database;
@@ -132,28 +133,6 @@ class UserController
         
         // Retorne o token JWT na resposta
         $response->getBody()->write(json_encode(['token' => $token]));
-        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-      }
-    }
-    catch(PDOException $e)
-    {
-      $response->getBody()->write(json_encode($e->getMessage()));
-      return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
-    }
-  }
-
-  public function twoFactor(Request $request, Response $response, $args) 
-  {
-    $data = get_object_vars(json_decode($request->getBody()));
-
-    try{
-      $user = $this->userRepository->getUserById($args["id"]);
-
-      $verify = $this->userRepository->twoFactor($user, $data);
-
-      if ($verify)
-      {
-        $response->getBody()->write(json_encode(['message' => "sucesso"]));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
       }
     }
