@@ -23,11 +23,20 @@ class twoFactorController
         try{
             $verify = $this->twoFactorService->twoFactor($args["id"], $data);
 
+            if (is_int($verify))
+            {
+                $response->getBody()->write(json_encode(['message' => $verify]));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+            }
+
             if ($verify)
             {
                 $response->getBody()->write(json_encode(['message' => "sucesso"]));
                 return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
             }
+
+            $response->getBody()->write(json_encode(['message' => "falha"]));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
         catch(PDOException $e)
         {
