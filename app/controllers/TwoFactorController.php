@@ -23,7 +23,7 @@ class TwoFactorController
         try{
             $verify = $this->twoFactorService->twoFactor($args["id"], $data);
 
-            if (is_int($verify))
+            if (is_int($verify) || (!$verify))
             {
                 $response->getBody()->write(json_encode(['message' => $verify]));
                 return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
@@ -31,12 +31,9 @@ class TwoFactorController
 
             if ($verify)
             {
-                $response->getBody()->write(json_encode(['fator_autenticacao' => $verify]));
+                $response->getBody()->write(json_encode(['message' => $verify]));
                 return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
             }
-
-            $response->getBody()->write(json_encode(['message' => $verify]));
-            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
         catch(PDOException $e)
         {
