@@ -38,7 +38,7 @@ class TwoFactorService
         if($data["question"] == $response)
         {
             $_SESSION['failed_attempts'] = 0;
-            return true;
+            return $response;
         }
 
         if($_SESSION['failed_attempts'] >= 2)
