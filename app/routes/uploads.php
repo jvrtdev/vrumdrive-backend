@@ -10,7 +10,7 @@ return function ($app) {
     
     // Rotas protegidas com JWT
     $app->group('/api', function (RouteCollectorProxy $group) {
-        $group->put('/upload/user/{id}', UploadController::class . ':uploadProfileImg');//{id} => id do usuario 
+        $group->post('/upload/user/{id}', UploadController::class . ':uploadProfileImg');//{id} => id do usuario 
         
     })->add(new AuthJwt());
 };
