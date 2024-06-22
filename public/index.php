@@ -11,6 +11,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 $app = AppFactory::create();
+date_default_timezone_set('America/Sao_Paulo');
 
 //autoriza a rota options 
 $app->options('/{routes:.+}', function ($request, $response, $args) {
