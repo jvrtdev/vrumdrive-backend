@@ -33,6 +33,7 @@ class UserController
   {
       try{
         $data = $this->userRepository->getAllUsers();
+        array_reverse($data);
 
         $body = json_encode($data);  
         
