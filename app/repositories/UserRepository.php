@@ -33,7 +33,7 @@ class UserRepository
     
     public function getAllUsers(): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM users LEFT JOIN address ON (users.id_user = address.id_user) ORDER BY id_user DESC');
+        $stmt = $this->pdo->query('SELECT * FROM users LEFT JOIN address ON (users.id_user = address.id_user) ');
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
