@@ -30,6 +30,9 @@ return function ($app) {
       // rotas dos dados
       $group->get('/data', AdminController::class . ':getAdminData');
 
+      // upload de imagem 
+      $group->post('/upload/vehicle/{id}', UploadController::class . ':uploadVehicleImg');
+
     })->add(new AuthAdminJwt());
     
 };

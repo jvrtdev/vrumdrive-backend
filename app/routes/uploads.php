@@ -13,9 +13,4 @@ return function ($app) {
     $app->group('/api', function (RouteCollectorProxy $group) {
         $group->post('/upload/user/{id}', UploadController::class . ':uploadProfileImg');//{id} => id do usuario         
     })->add(new AuthJwt());
-
-    //rotas do admin
-    $app->group('/api/admin', function (RouteCollectorProxy $group) {
-        $group->post('/upload/vehicle/{id}', UploadController::class . ':uploadVehicleImg');//{id} => id do usuario         
-    })->add(new AuthAdminJwt());
 };
