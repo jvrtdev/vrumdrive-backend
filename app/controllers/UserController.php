@@ -147,8 +147,7 @@ class UserController
   public function updateUserById(Request $request, Response $response, $args)
   {
     $data = get_object_vars(json_decode($request->getBody()));
-    
-    if($data["senha"]){
+    if($data['senha']){
       $passwordHash = password_hash($data["senha"], PASSWORD_DEFAULT);
       $data["senha"] = $passwordHash;
     }
