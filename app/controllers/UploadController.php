@@ -79,7 +79,7 @@ class UploadController
         return $response->withStatus(500);
     }
 
-    public function uploadVehicleImages(Request $request, Response $response, $args)
+    public function uploadVehicleImg(Request $request, Response $response, $args)
     {
         $uploadedFiles = $request->getUploadedFiles();
 
