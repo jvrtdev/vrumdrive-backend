@@ -61,7 +61,7 @@ class BookingController
 
   public function createNewBooking(Request $request, Response $response)
   {
-    $data = get_object_vars(json_decode($request->getBody()));
+    $data = json_decode($request->getBody());
     
     try{
       $vehicle = $this->vehicleRepository->getVehicleById($data['id_vehicle']);
