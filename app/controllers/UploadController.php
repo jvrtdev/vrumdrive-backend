@@ -63,9 +63,8 @@ class UploadController
 
                 $imageUrl = $result['ObjectURL'];
                 
-                $userImgUpdated = $this->userRepository->updateProfileImgByUserId($imageUrl, $args['id']);
+                $this->userRepository->updateProfileImgByUserId($imageUrl, $args['id']);
                 
-                            
                 $response->getBody()->write($imageUrl);
                 return $response->withStatus(200);
             }
@@ -83,37 +82,75 @@ class UploadController
     {
         $uploadedFiles = $request->getUploadedFiles();
 
-    if (empty($uploadedFiles['image'])) {
-        $response->getBody()->write('No file uploaded');
-        return $response->withStatus(400);
-    }
-
-    $uploadedFile = $uploadedFiles['image'];
-
-    if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-        $filename = $uploadedFile->getClientFilename();
-        $stream = $uploadedFile->getStream();
-
-        try {
-            $result = $this->s3Client->putObject([
-                'Bucket' => $this->bucketName,
-                'Key'    => "public/{$filename}",
-                'Body'   => $stream,
-                'ACL'    => 'public-read', // Opcional: se quiser que o arquivo seja público
-            ]);
-
-            $imageUrl = $result['ObjectURL'];
-            
-            $vehicleImgUpdated = $this->vehiclesRepository->addVehicleImgById($imageUrl, $args['id']);
-                     
-            $response->getBody()->write('File uploaded successfully: ' . $imageUrl);
-            return $response->withStatus(200);
-        } catch (AwsException $e) {
-            $response->getBody()->write('Error uploading file: ' . $e->getMessage());
-            return $response->withStatus(500);
+        if (empty($uploadedFiles['image'])) {
+            $response->getBody()->write('No file uploaded');
+            return $response->withStatus(400);
         }
-      }
+
+        $uploadedFile = $uploadedFiles['image'];
+
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = $uploadedFile->getClientFilename();
+            $stream = $uploadedFile->getStream();
+
+            try {
+                $result = $this->s3Client->putObject([
+                    'Bucket' => $this->bucketName,
+                    'Key'    => "public/{$filename}",
+                    'Body'   => $stream,
+                    'ACL'    => 'public-read', // Opcional: se quiser que o arquivo seja público
+                ]);
+
+                $imageUrl = $result['ObjectURL'];
+                
+                $this->vehiclesRepository->addVehicleImgById($imageUrl, $args['id']);
+                        
+                $response->getBody()->write('File uploaded successfully: ' . $imageUrl);
+                return $response->withStatus(200);
+            }
+            catch (AwsException $e)
+            {
+                $response->getBody()->write('Error uploading file: ' . $e->getMessage());
+                return $response->withStatus(500);
+            }
+        }
     }
 
-    
+    public function updateVehicleImg(Request $request, Response $response, $args)
+    {
+        $uploadedFiles = $request->getUploadedFiles();
+
+        if (empty($uploadedFiles['image'])) {
+            $response->getBody()->write('No file uploaded');
+            return $response->withStatus(400);
+        }
+
+        $uploadedFile = $uploadedFiles['image'];
+
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = $uploadedFile->getClientFilename();
+            $stream = $uploadedFile->getStream();
+
+            try {
+                $result = $this->s3Client->putObject([
+                    'Bucket' => $this->bucketName,
+                    'Key'    => "public/{$filename}",
+                    'Body'   => $stream,
+                    'ACL'    => 'public-read', // Opcional: se quiser que o arquivo seja público
+                ]);
+
+                $imageUrl = $result['ObjectURL'];
+                
+                $this->vehiclesRepository->updateVehicleImg($imageUrl, $args['id']);
+                        
+                $response->getBody()->write('File uploaded successfully: ' . $imageUrl);
+                return $response->withStatus(200);
+            }
+            catch (AwsException $e)
+            {
+                $response->getBody()->write('Error uploading file: ' . $e->getMessage());
+                return $response->withStatus(500);
+            }
+        }
+    }
 }
