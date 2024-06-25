@@ -12,5 +12,6 @@ return function ($app) {
     $app->group('/api', function (RouteCollectorProxy $group) {
        $group->post("/booking/create", BookingController::class . ':createNewBooking');
        $group->get("/booking/user/{id}", BookingController::class . ':getBookingByUserId');
+       $group->delete("/booking/delete/{id}", BookingController::class . ':deleteBookingById');
     })->add(new AuthJwt());
 };
