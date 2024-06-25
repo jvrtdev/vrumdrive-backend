@@ -237,4 +237,16 @@ class VehicleRepository
 
         return $stmt->execute();
     }
+
+    public function updateVehicleImg($imgUrl, $id)
+    {
+        $sql = 'UPDATE vehicles SET img = :imgUrl WHERE id_vehicle = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':imgUrl', $imgUrl);
+        $stmt->bindValue(':id', $id);
+
+        return $stmt->execute();
+    }
 }
