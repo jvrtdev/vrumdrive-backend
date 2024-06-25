@@ -25,7 +25,6 @@ return function ($app) {
       // rotas das reservas
       $group->get("/booking/{id}", BookingController::class . ':getBookingById');
       $group->get("/bookings", BookingController::class . ':getAllBookings');
-      $group->delete("/booking/delete/{id}", BookingController::class . ':deleteBookingById');
 
       // rotas dos dados
       $group->get('/data', AdminController::class . ':getAdminData');
