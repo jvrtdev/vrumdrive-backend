@@ -17,6 +17,7 @@ return function ($app) {
 
       // rotas dos veículos
       $group->post('/upload/vehicle/{id}', UploadController::class . ':uploadVehicleImages');
+      $group->post('/update/image/vehicle/{id}', UploadController::class . ':updateVehicleImg');
       $group->post('/vehicle/create', VehicleController::class . ':createVehicle');
       $group->put('/vehicle/update/{id}', VehicleController::class . ':updateVehicleById');
       $group->delete('/vehicle/delete/{id}', VehicleController::class . ':deleteVehicleById');
