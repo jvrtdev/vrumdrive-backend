@@ -63,7 +63,7 @@ class BookingService
       try{
         $currentBooking = $this->bookingRepository->getBookingById($id_booking);
         $this->bookingRepository->deleteBookingById($id_booking);
-        $this->vehicleRepository->updateVehicleById("disponivel", $currentBooking['id_vehicle']);
+        $this->vehicleRepository->updateVehicleById(["status" => "disponivel"], $currentBooking['id_vehicle']);
         return true;
       }catch(PDOException $e)
       {
