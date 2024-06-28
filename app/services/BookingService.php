@@ -2,10 +2,28 @@
 
 namespace App\Services;
 
+use App\Database;
+use App\Repositories\BookingRepository;
+use App\Repositories\VehicleRepository;
 use DateTime;
+use PDOException;
 
 class BookingService
 {
+    private $bookingRepository;
+    private $vehicleRepository;
+
+    public function __construct()
+    {
+      $database = new Database();
+
+      $this->bookingRepository = new BookingRepository($database);  
+
+      $this->vehicleRepository = new VehicleRepository($database);
+
+    }
+
+
     public function pickDateBooking($dateString)
     {
       //cria um objeto DateTime a partir da string
@@ -38,6 +56,19 @@ class BookingService
       //pegar o intervalo em meses e dias
 
       return $interval->days;
+    }
+
+    public function handleStatusVehicleOnDeleteBooking($id_booking)
+    {
+      try{
+        $currentBooking = $this->bookingRepository->getBookingById($id_booking);
+        $this->bookingRepository->deleteBookingById($id_booking);
+        $this->vehicleRepository->updateVehicleById("disponivel", $currentBooking['id_vehicle']);
+        return true;
+      }catch(PDOException $e)
+      {
+        return $e->getMessage();
+      }
     }
     
 }

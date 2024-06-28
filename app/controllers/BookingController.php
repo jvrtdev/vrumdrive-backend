@@ -148,7 +148,7 @@ class BookingController
   public function deleteBookingById(Request $resquest, Response $response, $args)
   {
     try{
-      $this->bookingRepository->deleteBookingById($args["id"]);
+      $this->bookingService->handleStatusVehicleOnDeleteBooking($args["id"]);
       
       $response->getBody()->write(json_encode(['message' => "sucesso"]));
       return $response->withHeader('Content-Type', 'application/json');
