@@ -1,258 +1,88 @@
-# Documentação da API
+Locadora de Veículos - Backend
 
-## Visão Geral
+Este repositório contém o código-fonte do backend da plataforma de locação de veículos. O objetivo deste projeto é fornecer uma solução robusta e escalável para gerenciar a locação de veículos, incluindo autenticação de usuários, gerenciamento de veículos e reservas.
+Tecnologias Utilizadas
 
-Esta API possui diversas rotas, segmentadas para diferentes tipos de usuários: administradores, usuários comuns e gerenciamento de reservas. Além disso, há rotas específicas para registro de logs do sistema.
+    Linguagem de Programação: PHP
+    Framework: Slim-Framework
+    Banco de Dados: MySQL
+    Arquitetura: Design Patterns
+    Serviços na Nuvem: AWS (Amazon Web Services), EC2, RDS, S3
 
----
+Funcionalidades
 
-## Rotas do Usuário Admin
+    Autenticação de Usuários: Sistema de login e registro seguro.
+    Gerenciamento de Veículos: Adição, edição e remoção de veículos disponíveis para locação.
+    Reservas: Criação, edição e cancelamento de reservas de veículos.
+    Proteção de Rotas: Acesso seguro às rotas do sistema, garantindo a proteção dos dados dos usuários.
 
-### Listar todos os usuários
-**GET** `/api/admin/users`
+Requisitos
 
-**Headers:** `Authorization: Bearer token`: string 
+    PHP 7.4 ou superior
+    Composer
+    MySQL
+    AWS CLI configurado (para serviços na nuvem)
+    (A API ATUALMENTE ESTÁ FORA DO AR)
 
-**Descrição:** Retorna uma lista com todos os usuários cadastrados no sistema.
+Instalação
 
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-- **Corpo:** Lista de usuários (formato JSON)
+    Clone este repositório:
 
-### Deletar usuário pelo ID
-**DELETE** `/api/admin/user/{id}`
+    bash
 
-**Headers:** `Authorization: Bearer token`: string 
+git clone https://github.com/seu-usuario/locadora-veiculos-backend.git
+cd locadora-veiculos-backend
 
+Instale as dependências:
 
-**Descrição:** Deleta um usuário específico baseado no seu ID.
+bash
 
-**Parâmetros de URL:**
-- `id` (integer): ID do usuário a ser deletado.
+composer install
 
-**Resposta de Sucesso:**
-- **Status:** 200 OK
+Configure o arquivo .env com suas credenciais do banco de dados e AWS.
 
-### Listar usuário pelo ID
-**GET** `/api/admin/{id}`
+Execute as migrações do banco de dados:
 
-**Headers:** `Authorization: Bearer token`: string 
+bash
 
-**Descrição:** Retorna as informações de um usuário específico baseado no seu ID.
+php artisan migrate
 
-**Parâmetros de URL:**
-- `id` (integer): ID do usuário a ser listado.
+Inicie o servidor de desenvolvimento:
 
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-- **Corpo:** Dados do usuário (formato JSON)
+bash
 
-### Upload de imagem do veículo
-**POST** `/api/admin/vehicle/{id}`
+    php artisan serve
 
-**Headers:** `Authorization: Bearer token`: string 
+Uso
+Endpoints Principais
 
-**Descrição:** Faz o upload de uma imagem de um veículo associado ao ID do veículo.
+    Autenticação
+        POST /api/user/login - Login de usuário
+        POST /api/user/create - Registro de novo usuário
 
-**Parâmetros de URL:**
-- `id` (integer): ID do veículo.
+    Veículos
+        GET /api/vehicles - Listar todos os veículos
+        POST /api/vehicles - Adicionar novo veículo
+        PUT /api/vehicles/{id} - Editar veículo
+        DELETE /api/vehicles/{id} - Remover veículo
 
-**Corpo da Requisição:**
-- Formato: multipart/form-data
-  - `file`: Arquivo da imagem do veículo.
+    Reservas
+        GET /api/bookings - Listar todas as reservas
+        POST /api/booking - Criar nova reserva
+        PUT /api/booking/{id} - Editar reserva
+        DELETE /api/booking/{id} - Cancelar reserva
 
-**Resposta de Sucesso:**
-- **Status:** 201 Created
+Contribuição
 
----
+    Faça um fork deste repositório.
+    Crie uma branch para sua feature ou correção de bug (git checkout -b feature/nome-da-feature).
+    Commit suas alterações (git commit -m 'Adicionar nova feature').
+    Faça um push para a branch (git push origin feature/nome-da-feature).
+    Abra um Pull Request.
 
-## Rotas do Usuário Comum
+Licença
 
-### Criação do usuário
-**POST** `/api/user/create`
+Este projeto está licenciado sob a MIT License.
+Contato
 
-**Descrição:** Cria um novo usuário no sistema.
-
-**Corpo da Requisição:**
-- Formato: JSON
-  - `nome`: string
-  - `nome_mat`:string
-  - `email`: string
-  - `login`: string
-  - `senha`: string
-  - `dataNascimento`: string (YYYY-MM-DD)
-  - `genero`: ENUM('F', 'M', 'O')
-  - `cpf`: string
-  - `celular`: string
-
-**Resposta de Sucesso:**
-- **Status:** 201 Created
-- **Corpo:** Dados do usuário criado (formato JSON)
-
-### Login e autorização do usuário
-**POST** `/api/user/login`
-
-**Descrição:** Realiza o login e autoriza o usuário.
-
-**Corpo da Requisição:**
-- Formato: JSON
-  - `login`: string || `email`: string
-  - `senha`: string
-
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-
-### Rota de 2FA do usuário
-**POST** `/api/user/2FA/{id}`
-
-**Descrição:** Realiza a autenticação de dois fatores para o usuário.
-
-**Parâmetros de URL:**
-- `id` (integer): ID do usuário.
-
-**Corpo da Requisição:**
-- Token de autenticação JWT (formato JSON)
-
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-
-### Lista todas as informações do usuário
-**GET** `/api/user/{id}`
-
-**Headers:** Authorization: Bearer token: string 
-
-**Descrição:** Retorna todas as informações de um usuário específico.
-
-**Parâmetros de URL:**
-- `id` (integer): ID do usuário.
-
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-- **Corpo:** Dados completos do usuário (formato JSON)
-
-### Alteração de usuário
-**PUT** `/api/user/update/{id}`
-
-**Headers:** `Authorization: Bearer token`: string 
-
-**Descrição:** Atualiza as informações de um usuário específico.
-
-**Parâmetros de URL:**
-- `id` (integer): ID do usuário.
-
-**Corpo da Requisição:**
-- Formato: JSON
-  - `nome` (opcional): string
-  - `email` (opcional): string
-  - `senha` (opcional): string
-  - `dataNascimento` (opcional): string (YYYY-MM-DD)
-
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-
-### Exclusão de usuário
-**DELETE** `/api/user/delete/{id}`
-
-**Headers:** `Authorization: Bearer token`: string 
-
-**Descrição:** Exclui um usuário específico.
-
-**Parâmetros de URL:**
-- `id` (integer): ID do usuário.
-
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-
-### Upload da foto de perfil do usuário
-**POST** `/api/upload/user/{id}`
-
-**Headers:** `Authorization: Bearer token`: string 
-
-**Descrição:** Faz o upload da foto de perfil de um usuário específico.
-
-**Parâmetros de URL:**
-- `id` (integer): ID do usuário.
-
-**Corpo da Requisição:**
-- Formato: multipart/form-data
-  - `file`: Arquivo da foto de perfil.
-
-**Resposta de Sucesso:**
-- **Status:** 201 Created
-
----
-
-## Rotas do Log
-
-### Listar todos os logs do sistema
-**GET** `/api/admin/log`
-
-**Headers:** `Authorization: Bearer token`: string 
-
-**Descrição:** Retorna uma lista com todos os logs do sistema.
-
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-- **Corpo:** Lista de logs (formato JSON)
-
-### Criar um registro na tabela de log
-**POST** `/api/admin/log`
-
-**Headers:** `Authorization: Bearer token`: string 
-
-**Descrição:** Cria um registro na tabela de log ao autenticar um usuário.
-
-**Corpo da Requisição:**
-- Formato: JSON
-  - `pickupDate`: datetime (YYYY-MM-DDTHH:HH)
-  - `returnDate`: datetime (YYYY-MM-DDTHH:HH)
-  - `id_vehicle`: number
-
-**Resposta de Sucesso:**
-- **Status:** 201 Created
-
----
-
-## Rotas de Reserva
-
-### Calcular o valor da reserva
-**POST** `/api/booking/price`
-
-**Descrição:** Calcula o valor da reserva e retorna o valor total.
-
-**Resposta de Sucesso:**
-- **Status:** 200 OK
-- **Corpo:**
-  - {
-	`interval_days`: number,
-	`total_price`: number,
-	`vehicle`: {
-		`id_vehicle`: number,
-		`img`: string,
-		`modelo`: string,
-		`marca`: string,
-		`categoria`: string,
-		`ano`: year,
-		`status`: boolean( 0 || 1)
-		`preco`: float
-	}
-}
-
-### Agendar uma nova reserva
-**POST** `/api/booking/create`
-
-**Headers:** `Authorization: Bearer token`: string 
-
-**Descrição:** Cria uma nova reserva no sistema.
-
-**Corpo da Requisição:**
-- Formato: JSON
-  - `id_user`: number
-  - `id_vehicle`: number
-  - `pickupDate`: datetime (YYYY-MM-DDTHH:HH)
-  - `returnDate`: datetime (YYYY-MM-DDTHH:HH)
-  - `location`: string
-
-**Resposta de Sucesso:**
-- **Status:** 201 Created
-- **Corpo:** Dados da reserva criada (formato JSON)
+Para mais informações, entre em contato através do e-mail: seu-email@exemplo.com.
