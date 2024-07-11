@@ -1,7 +1,7 @@
-Locadora de Veículos - Backend
+# Locadora de Veículos - VrumDrive
 
 Este repositório contém o código-fonte do backend da plataforma de locação de veículos. O objetivo deste projeto é fornecer uma solução robusta e escalável para gerenciar a locação de veículos, incluindo autenticação de usuários, gerenciamento de veículos e reservas.
-Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
     Linguagem de Programação: PHP
     Framework: Slim-Framework
@@ -9,14 +9,14 @@ Tecnologias Utilizadas
     Arquitetura: Design Patterns
     Serviços na Nuvem: AWS (Amazon Web Services), EC2, RDS, S3
 
-Funcionalidades
+## Funcionalidades
 
     Autenticação de Usuários: Sistema de login e registro seguro.
     Gerenciamento de Veículos: Adição, edição e remoção de veículos disponíveis para locação.
     Reservas: Criação, edição e cancelamento de reservas de veículos.
     Proteção de Rotas: Acesso seguro às rotas do sistema, garantindo a proteção dos dados dos usuários.
 
-Requisitos
+## Requisitos
 
     PHP 7.4 ou superior
     Composer
@@ -24,7 +24,7 @@ Requisitos
     AWS CLI configurado (para serviços na nuvem)
     (A API ATUALMENTE ESTÁ FORA DO AR)
 
-Instalação
+## Instalação
 
     Clone este repositório:
 
@@ -33,7 +33,7 @@ Instalação
 git clone https://github.com/seu-usuario/locadora-veiculos-backend.git
 cd locadora-veiculos-backend
 
-Instale as dependências:
+## Instale as dependências:
 
 bash
 
@@ -47,13 +47,13 @@ bash
 
 php artisan migrate
 
-Inicie o servidor de desenvolvimento:
+## Inicie o servidor de desenvolvimento:
 
 bash
 
-    php artisan serve
+    php -S localhost:8080 -t public
 
-Uso
+## Uso
 Endpoints Principais
 
     Autenticação
@@ -85,4 +85,4 @@ Licença
 Este projeto está licenciado sob a MIT License.
 Contato
 
-Para mais informações, entre em contato através do e-mail: seu-email@exemplo.com.
+Para mais informações, entre em contato através do e-mail: jvrtdev@gmail.com.
